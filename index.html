@@ -382,6 +382,54 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .story-done-card .sd-title  { font-size: 1.4rem; font-weight: 900; color: var(--yellow); }
 .story-done-card .sd-msg    { color: var(--muted); margin-top: 8px; font-size: 0.95rem; line-height: 1.5; }
 
+
+/* ── KIDS BOOKS ── */
+.kids-book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.kids-book-card {
+  background: var(--card); border-radius: var(--radius); padding: 18px 14px;
+  text-align: center; cursor: pointer; border: 2px solid transparent;
+  transition: border-color 0.15s, background 0.15s;
+}
+.kids-book-card:active { background: var(--card2); border-color: var(--yellow); }
+.kids-book-card .kb-icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
+.kids-book-card .kb-title { font-weight: 700; font-size: 0.9rem; line-height: 1.3; }
+
+.book-page-wrap {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 28px 20px; margin-bottom: 16px;
+  display: flex; flex-direction: column; align-items: center; min-height: 260px;
+  justify-content: center; text-align: center;
+}
+.book-page-emoji { font-size: 5rem; margin-bottom: 20px; line-height: 1; }
+.book-page-words { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 4px; }
+.book-word {
+  font-size: 1.6rem; font-weight: 700; cursor: pointer;
+  padding: 2px 4px; border-radius: 6px; border-bottom: 3px solid transparent;
+  transition: color 0.15s, border-color 0.15s; line-height: 1.5;
+  font-family: 'OpenDyslexic', 'Segoe UI', system-ui, sans-serif;
+}
+.book-word:active, .book-word.speaking { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+.book-nav { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 12px; }
+.book-nav-btn {
+  flex: 1; background: var(--card); border: none; border-radius: var(--rsm);
+  padding: 16px; font-size: 1.1rem; font-weight: 700; color: var(--text);
+  cursor: pointer;
+}
+.book-nav-btn:active { background: var(--card2); }
+.book-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.book-nav-btn.read-btn { background: var(--blue); color: #fff; flex: 1.5; }
+.book-page-counter { text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 8px; width: 100%; }
+.book-hint { text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 14px; }
+
+.book-done-card {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 32px 24px; text-align: center; margin-bottom: 20px;
+}
+.book-done-card .bd-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+.book-done-card .bd-title { font-size: 1.4rem; font-weight: 900; color: var(--yellow); }
+.book-done-card .bd-msg   { color: var(--muted); font-size: 0.95rem; margin-top: 8px; }
+
 </style>
 </head>
 <body>
@@ -1302,176 +1350,254 @@ const STORY_TOPICS = [
   { id: 'music',   icon: '🎵', name: 'Music' },
 ];
 
+// ── TEEN STORIES (14-15 year old level) ──────────────────────────────
 const STORIES = {
   sport: [
-    { title: "The Big Game", sentences: [
-      "The crowd roared as the teams ran onto the field.",
-      "Jake had been waiting for this moment all season.",
-      "His boots hit the grass and he felt a surge of energy.",
-      "The referee blew the whistle and the game began.",
-      "Jake sprinted down the wing, the ball at his feet.",
-      "A defender came in hard but Jake twisted away.",
-      "He looked up, saw the gap, and crossed the ball.",
-      "Marcus rose above everyone and headed it into the net.",
-      "The stadium erupted — they were one nil up.",
-      "Jake ran to his teammate and they jumped together in celebration.",
-      "The second half was tighter, with both teams grinding hard.",
-      "With five minutes left, the opposition equalised.",
-      "Jake took a deep breath. There was still time.",
-      "He received the ball on the edge of the box.",
-      "Without thinking, he curled a shot toward the top corner.",
-      "The goalkeeper dived but could not reach it.",
-      "The net rippled and the whole team piled on top of Jake.",
-      "It was the best moment of his life.",
+    { title: "Under Pressure", sentences: [
+      "The scoreline was level with three minutes remaining, and Jayden had the ball on halfway.",
+      "His lungs were burning — he had covered nearly twelve kilometres in ninety minutes.",
+      "The opposition's defensive line was compact, leaving almost no space to exploit.",
+      "Jayden glanced left, recognised a channel opening, and accelerated without warning.",
+      "Two defenders converged, but he had already released the pass into the gap.",
+      "His teammate collected it at the edge of the penalty area and drove forward.",
+      "The goalkeeper rushed off his line, attempting to narrow the angle.",
+      "The shot was low, hard, and precise — it slid beneath the goalkeeper's dive.",
+      "The net billowed and the substitutes erupted from the bench.",
+      "Jayden stood with his hands on his knees, staring at the ground.",
+      "He had visualised that exact scenario in training three weeks earlier.",
+      "His coach had told him that preparation was what separated good players from great ones.",
+      "At the time he had thought it was the kind of thing coaches always said.",
+      "Standing in the middle of the pitch as the final whistle blew, he understood it differently.",
     ]},
-    { title: "First Surf", sentences: [
-      "Mia had never surfed before, but today was the day.",
-      "Her instructor, Sam, handed her a thick foam board.",
-      "The waves at the beach looked small but fast.",
-      "Sam showed her how to pop up from lying down.",
-      "Mia practised on the sand until it felt natural.",
-      "Then she waded into the cold, fizzing water.",
-      "The first wave knocked her straight off the board.",
-      "She came up sputtering, laughing despite herself.",
-      "The second wave was the same.",
-      "But on the third attempt, something clicked.",
-      "She felt the wave lift the board and she pushed up.",
-      "For three seconds she was standing, actually surfing.",
-      "Then she toppled sideways into the foam.",
-      "But three seconds was enough.",
-      "She paddled back out with a huge grin on her face.",
-      "By the end of the session she had ridden five waves.",
-      "Sam said she was a natural.",
-      "Mia already knew she would be back tomorrow.",
+    { title: "Qualifying Run", sentences: [
+      "Aroha had been training for the regional cross-country qualifier since February.",
+      "The course was five kilometres of uneven terrain, steep climbs, and technical descents.",
+      "She had studied the route map until she could picture every gradient.",
+      "Race morning arrived cold and grey, with a low mist clinging to the hills.",
+      "At the start line she controlled her breathing and ignored the nerves.",
+      "The gun fired and the pack surged forward with frantic early energy.",
+      "Aroha resisted the urge to go with them — she had a plan.",
+      "She settled into her rhythm at the back of the leading group and waited.",
+      "By the halfway mark, three runners ahead of her were already fading.",
+      "She moved past them steadily, maintaining her pace without breaking form.",
+      "The final climb was brutal, and her legs screamed at her to slow down.",
+      "Instead, she drove harder off her forefoot and shortened her stride.",
+      "She crested the hill and opened up on the descent.",
+      "She crossed the line in fourth place — a qualifying spot.",
+      "She bent double, hands on knees, and allowed herself one quiet smile.",
     ]},
   ],
   gaming: [
-    { title: "The Final Boss", sentences: [
-      "Leo had been stuck on this level for three days.",
-      "The boss had over a hundred health points and hit like a truck.",
-      "Every run ended the same way — a crushing defeat.",
-      "But tonight felt different.",
-      "He had memorised the attack patterns.",
-      "Phase one: dodge left on the red flash, strike twice.",
-      "Phase two: use the shield when the arms spin.",
-      "Phase three: stay mobile, never stop moving.",
-      "Leo cracked his knuckles and started the run.",
-      "Phase one went perfectly — three clean hits.",
-      "Phase two was shaky but he survived with one bar of health left.",
-      "Then came phase three.",
-      "His hands were shaking.",
-      "The boss moved faster now, the screen shaking with each hit.",
-      "Leo kept moving, kept dodging, kept striking.",
-      "Then he saw it — the boss paused for just a second.",
-      "He used his special attack.",
-      "The screen flashed white and the boss exploded.",
-      "Leo leaned back in his chair and stared at the ceiling.",
-      "He had done it. Finally.",
+    { title: "Ranked", sentences: [
+      "Tyler had been hovering at the edge of Diamond rank for six weeks.",
+      "Every time he came close, a losing streak would drag him back down.",
+      "He had watched his replays, identified his decision-making errors, and adjusted his playstyle.",
+      "Tonight he was composed in a way he hadn't felt before.",
+      "He wasn't chasing kills — he was reading the map, tracking rotations, controlling space.",
+      "His communications were clear and calm even when teammates made mistakes.",
+      "He absorbed the frustration without letting it affect his performance.",
+      "In the final round, his team was down by one and the clock was against them.",
+      "He spotted an opportunity the others hadn't seen — a gap in the enemy flank.",
+      "He called the play, moved decisively, and his teammates followed without hesitation.",
+      "The engagement lasted eleven seconds and they won it cleanly.",
+      "The match result loaded and he stared at his new rank.",
+      "Diamond. Finally.",
+      "He sat back and realised the achievement felt less about the rank and more about the process.",
+      "He had become a different player to get here, and that was the part that actually mattered.",
     ]},
-    { title: "New Player", sentences: [
-      "It was Ethan's first day in the online server.",
-      "He had no gear, no money, and no idea what he was doing.",
-      "The other players moved confidently through the world.",
-      "He stumbled into a cave and immediately got lost.",
-      "A message popped up from another player: 'Need help?'",
-      "Ethan typed back: 'Yeah, totally lost.'",
-      "The player, named Raven, appeared beside him in the cave.",
-      "She had glowing armour and a sword that crackled with energy.",
-      "She guided him out of the cave without saying much.",
-      "Then she handed him a basic sword and a health potion.",
-      "'Start with these,' she said.",
-      "Ethan didn't know what to say. 'Why are you helping me?'",
-      "'Someone helped me when I started,' she replied.",
-      "They ended up playing together for the whole afternoon.",
-      "By the end Ethan had levelled up four times.",
-      "He didn't feel like a new player anymore.",
+    { title: "The Modder", sentences: [
+      "Zoe had been modding games since she was twelve, starting with simple texture swaps.",
+      "Now at fifteen, she was rewriting AI behaviour scripts for a game with over two million players.",
+      "The community forums had noticed her work — her mods had been downloaded forty thousand times.",
+      "A developer from the studio had sent her a private message asking if she was interested in a conversation.",
+      "She had reread the message four times before accepting that it was genuine.",
+      "During the call, they asked how she had taught herself scripting without formal instruction.",
+      "She explained that she had started by reading other people's code and asking why each line existed.",
+      "She had broken things repeatedly, and each failure had forced her to understand the underlying logic.",
+      "The developer laughed and said that was essentially how professional programmers worked.",
+      "They offered her a remote internship over the summer school break.",
+      "Zoe accepted immediately, then spent the rest of the evening unable to concentrate on anything else.",
+      "She messaged her friend: 'I think I just got a job because I was obsessed with a video game.'",
+      "The reply came back instantly: 'That is literally the best sentence I have ever read.'",
     ]},
   ],
   nature: [
-    { title: "The Kauri Tree", sentences: [
-      "In the heart of the Northland forest stood an ancient kauri tree.",
-      "Nobody knew exactly how old it was, but some said over a thousand years.",
-      "Its trunk was so wide that ten people holding hands could barely circle it.",
-      "The bark was thick and rough, like the skin of something prehistoric.",
-      "Tama had come here with his grandfather every year since he was small.",
-      "They would stand at the base and look up into the canopy far above.",
-      "His grandfather said the tree had seen more history than any book could hold.",
-      "The kauri had survived storms, droughts, and logging that had taken others.",
-      "Tama put his hand on the bark and felt something he couldn't quite explain.",
-      "A kind of stillness. Like the tree was breathing very slowly.",
-      "His grandfather crouched down and pointed to the roots.",
-      "'The roots spread as far as the branches,' he said.",
-      "'What you see is only half of what it is.'",
-      "Tama thought about that on the drive home.",
-      "He wondered how much of everything was hidden underground.",
+    { title: "The Hauraki Gulf", sentences: [
+      "The research vessel moved slowly through the Hauraki Gulf as dawn broke across the Coromandel.",
+      "Sixteen-year-old Wiremu was on deck before anyone else, watching for the dorsal fins he had been promised.",
+      "He had volunteered for the marine biology survey after finding the application form at school.",
+      "The lead researcher, Dr. Parata, explained that orca sightings in the Gulf had declined sharply over two decades.",
+      "The primary cause was a reduction in stingray populations, the orca's preferred prey in this region.",
+      "Human activity had altered the seabed habitat, disrupting the food chain in ways that took years to become visible.",
+      "Wiremu found the scale of it difficult to comprehend — invisible damage accumulating over time.",
+      "Then the radio crackled and a spotter plane reported a pod three kilometres to the north.",
+      "Within minutes, three orca were alongside the vessel, their breath exploding in white clouds.",
+      "A calf surfaced between two adults, no larger than a small dinghy.",
+      "Wiremu gripped the railing and felt something shift in his thinking.",
+      "He had always understood environmental issues as abstract problems belonging to politicians and scientists.",
+      "Looking at the calf, he understood them as something else entirely.",
+      "He asked Dr. Parata what he could actually do.",
+      "She said: 'Pay attention, study hard, and don't let people convince you that complexity is a reason for inaction.'",
     ]},
   ],
   mystery: [
-    { title: "The Missing Bike", sentences: [
-      "On Monday morning, Zara's bike was gone.",
-      "She had left it locked outside the library the night before.",
-      "The lock was still there. Cut clean through.",
-      "Zara took a photo of the lock and started asking around.",
-      "The librarian had seen a white van parked there around seven.",
-      "The dairy owner across the road thought he had seen two people.",
-      "But neither of them had a number plate.",
-      "Zara pulled up the street on Google Maps and noticed something.",
-      "There was a camera mounted on the traffic lights at the corner.",
-      "She walked to the council office and explained what had happened.",
-      "The woman behind the desk was surprised but looked it up.",
-      "The camera had footage from the night before.",
-      "There on the screen was a clear image of a white van.",
-      "And a partial plate: JB4.",
-      "Zara took a photo of the screen with her phone.",
-      "She wasn't sure what to do next, but she had somewhere to start.",
+    { title: "The Deleted Post", sentences: [
+      "The post had been live for eleven minutes before it disappeared.",
+      "Maia had seen it before the deletion — a photograph of a document she wasn't supposed to have seen.",
+      "The document appeared to show that the school board had approved a land sale six months before the public announcement.",
+      "She had screenshotted it instinctively, without knowing quite why.",
+      "Now, sitting in the school library, she was trying to work out whether the screenshot meant anything.",
+      "She searched the council's publicly available meeting minutes for any mention of the sale.",
+      "The minutes for the relevant month were listed but the file returned an error when she tried to open it.",
+      "That might have been a technical glitch. It might not have been.",
+      "She emailed the council's public records office requesting a copy of the missing minutes.",
+      "The automated reply said requests were processed within fifteen working days.",
+      "Three weeks later, a response arrived saying the document was subject to a commercial sensitivity exemption.",
+      "Maia read the Official Information Act guidance on that exemption until she understood it precisely.",
+      "The exemption required specific conditions to be met.",
+      "She wrote back citing the legislation and asking which condition applied.",
+      "She did not know if anything improper had occurred. But she intended to find out.",
     ]},
   ],
   space: [
-    { title: "Launch Day", sentences: [
-      "Maya had trained for this moment for seven years.",
-      "She sat strapped into her seat as the countdown began.",
-      "Through the small window she could see the curve of the horizon.",
-      "The ground crew were silent on the radio.",
-      "Ten. Nine. Eight.",
-      "She felt the vibration building beneath her.",
-      "Seven. Six. Five.",
-      "Her heart was hammering but her hands were steady.",
-      "Four. Three. Two. One.",
-      "The rocket ignited and she was pressed back into her seat.",
-      "The force was incredible, like the world was pushing her away.",
-      "Through the shaking she watched the sky darken from blue to black.",
-      "And then, suddenly, silence.",
-      "They had cleared the atmosphere.",
-      "Maya looked out the window.",
-      "The Earth was below her, wrapped in cloud and light.",
-      "It was the most beautiful thing she had ever seen.",
-      "She pressed her hand to the glass and just looked.",
+    { title: "Signal", sentences: [
+      "The anomaly appeared in the dataset on a Tuesday, buried in forty-eight hours of radio telescope observations.",
+      "Mila had been assigned to process the raw data as part of a university outreach programme for secondary students.",
+      "The signal repeated at precise intervals — too precise to be atmospheric interference.",
+      "She cross-referenced it against known pulsars, satellite frequencies, and terrestrial transmissions.",
+      "None of them matched.",
+      "She flagged it in the system with a note explaining what she had ruled out.",
+      "The following morning, she arrived to find three senior researchers gathered around her workstation.",
+      "They asked her to walk them through her methodology step by step.",
+      "She did, twice, without embellishment.",
+      "The lead astronomer sat quietly for a moment and then said: 'You haven't misread this.'",
+      "The signal was subsequently confirmed by two independent observatories.",
+      "Its origin remained unclear — natural, artificial, or something that didn't fit neatly into either category.",
+      "Mila was listed as a contributing researcher on the paper that followed.",
+      "She was sixteen years old.",
+      "When a journalist asked how it felt, she said: 'I just processed the data carefully. The signal did the rest.'",
     ]},
   ],
   music: [
-    { title: "The Audition", sentences: [
-      "Caleb stood outside the rehearsal room and could not make himself open the door.",
-      "Inside, the school band director was waiting.",
-      "Caleb had practised the piece three hundred times. Maybe more.",
-      "He knew every note. But his hands would not stop shaking.",
-      "He thought about walking away.",
-      "He had thought about that a lot lately.",
-      "But then he remembered why he wanted this.",
-      "He remembered the first time he had heard a live band play.",
-      "How the sound had felt physical, like it moved through him.",
-      "How he had known, right then, that this was what he wanted to do.",
-      "He opened the door.",
-      "Mr. Santos looked up and smiled. 'Ready when you are.'",
-      "Caleb sat down, positioned his hands, and took one slow breath.",
-      "Then he started to play.",
-      "Everything else disappeared.",
-      "When he finished, there was a moment of silence.",
-      "Mr. Santos wrote something on his clipboard.",
-      "'Can you start Tuesday?'",
-      "Caleb nodded. He didn't trust himself to speak.",
+    { title: "Session", sentences: [
+      "The recording session had been booked for two hours, which everyone in the room knew was not enough time.",
+      "Caleb had written the track over three weeks, revising the chord progression until it stopped feeling borrowed.",
+      "The producer, a quiet woman named Hemi, had listened to the demo twice without speaking.",
+      "Then she said: 'The bridge is the best thing on here. Build toward it instead of away from it.'",
+      "Caleb had not considered that the structure might be working against the strongest part of the song.",
+      "He spent forty minutes rewriting the verse melody on a borrowed guitar in the corner.",
+      "It was uncomfortable to rework something he had already considered finished.",
+      "But when he played the revised version, the difference was immediately apparent.",
+      "The bridge now felt like an arrival rather than an interruption.",
+      "They recorded six takes and comped the final version from pieces of three of them.",
+      "Hemi played it back through the studio monitors at full volume.",
+      "The sound filled the room in a way the demo never had.",
+      "Caleb sat on the floor with his back against the wall and listened.",
+      "He had made something that was genuinely his own, and someone who knew what they were doing had taken it seriously.",
+      "He filed that feeling away carefully, because he suspected he would need to remember it on harder days.",
     ]},
   ],
 };
+
+// ── KIDS BOOKS (5-7 year olds, simple sentences, illustrated with emoji) ──
+const KIDS_BOOKS = [
+  {
+    title: "The Lost Dog",
+    icon: "🐶",
+    pages: [
+      { emoji: "🐶", text: "Biscuit was a small brown dog." },
+      { emoji: "🏠", text: "He lived in a little house on a hill." },
+      { emoji: "🌳", text: "One day, Biscuit ran into the big forest." },
+      { emoji: "😟", text: "He could not find the way back home." },
+      { emoji: "🐦", text: "A bird saw Biscuit and flew down to help." },
+      { emoji: "🌸", text: "The bird said, 'Follow the pink flowers!'" },
+      { emoji: "🐾", text: "Biscuit ran and ran past the flowers." },
+      { emoji: "🏠", text: "And there was his little house on the hill!" },
+      { emoji: "🎉", text: "Biscuit jumped and barked with joy." },
+      { emoji: "❤️", text: "He was so happy to be home." },
+    ]
+  },
+  {
+    title: "The Red Kite",
+    icon: "🪁",
+    pages: [
+      { emoji: "☀️", text: "It was a sunny, windy day." },
+      { emoji: "👧", text: "Lily had a big red kite." },
+      { emoji: "🌬️", text: "She held the string and ran fast." },
+      { emoji: "🪁", text: "The kite went up, up, up into the sky!" },
+      { emoji: "🌤️", text: "It flew so high above the clouds." },
+      { emoji: "😮", text: "Lily had never seen it so high before." },
+      { emoji: "💨", text: "Then the wind stopped blowing." },
+      { emoji: "📉", text: "The kite came down slowly." },
+      { emoji: "😊", text: "Lily caught it in her hands." },
+      { emoji: "🌅", text: "She smiled and waited for the wind to come back." },
+    ]
+  },
+  {
+    title: "Too Many Frogs",
+    icon: "🐸",
+    pages: [
+      { emoji: "🐸", text: "There was one frog on the log." },
+      { emoji: "🐸🐸", text: "Then two frogs sat on the log." },
+      { emoji: "🐸🐸🐸", text: "Then three frogs jumped on the log!" },
+      { emoji: "😲", text: "The log started to wobble." },
+      { emoji: "🐸🐸🐸🐸", text: "Then four frogs piled on top." },
+      { emoji: "💦", text: "SPLASH! The log rolled and they all fell in the pond." },
+      { emoji: "😄", text: "The frogs laughed and laughed." },
+      { emoji: "🐸", text: "One by one they climbed back out." },
+      { emoji: "🪵", text: "They looked at the log. It was still there." },
+      { emoji: "🐸🐸🐸🐸", text: "So they all sat on it again!" },
+    ]
+  },
+  {
+    title: "The Brave Little Fish",
+    icon: "🐟",
+    pages: [
+      { emoji: "🐟", text: "Finn was a little blue fish." },
+      { emoji: "🌊", text: "He lived in a big, wide ocean." },
+      { emoji: "😨", text: "Finn was scared of the deep dark water." },
+      { emoji: "🐙", text: "His friend Opal the octopus was not scared at all." },
+      { emoji: "💬", text: "Opal said, 'Come with me, I will show you something!'" },
+      { emoji: "🐠", text: "They swam down past the pretty coral reef." },
+      { emoji: "✨", text: "The deep water was full of tiny lights." },
+      { emoji: "😍", text: "Finn had never seen anything so beautiful." },
+      { emoji: "🌟", text: "'It was here all along,' said Opal with a smile." },
+      { emoji: "🐟💙", text: "Finn was not scared of the deep water anymore." },
+    ]
+  },
+  {
+    title: "Grandma's Garden",
+    icon: "🌻",
+    pages: [
+      { emoji: "👵", text: "Grandma had the best garden in the street." },
+      { emoji: "🌻🌹🌷", text: "She had big yellow flowers and red roses and pink tulips." },
+      { emoji: "👦", text: "Sam came to visit every Saturday." },
+      { emoji: "🌱", text: "Grandma gave him a little pot and some seeds." },
+      { emoji: "🖐️", text: "He pushed the seeds into the soft brown soil." },
+      { emoji: "💧", text: "He watered them carefully with a small green can." },
+      { emoji: "☀️", text: "The sun shone warm on the little pot." },
+      { emoji: "📅", text: "Every Saturday Sam came back and looked." },
+      { emoji: "🌱", text: "One day, tiny green leaves poked out of the soil." },
+      { emoji: "😁", text: "Sam had grown something all by himself." },
+    ]
+  },
+  {
+    title: "The Snowy Day",
+    icon: "❄️",
+    pages: [
+      { emoji: "❄️", text: "Snow fell all night long." },
+      { emoji: "🌅", text: "In the morning everything was white." },
+      { emoji: "👦", text: "Tom put on his big warm coat." },
+      { emoji: "🧤", text: "He put on his red mittens and his hat." },
+      { emoji: "🚪", text: "He opened the door and stepped outside." },
+      { emoji: "👣", text: "His boots made deep prints in the snow." },
+      { emoji: "⛄", text: "He rolled a big snowball and then a smaller one." },
+      { emoji: "⛄", text: "He put the small ball on top and added a carrot nose." },
+      { emoji: "😊", text: "Tom stood back and smiled at his snowman." },
+      { emoji: "🏠", text: "Then he went inside for hot chocolate." },
+    ]
+  },
+];
 
 let SR = { topic: null, storyIdx: 0, sentenceIdx: 0, story: null };
 
@@ -1553,6 +1679,83 @@ function goReading() {
   const p = getProfile(S.profileId);
   // Show a chooser
   go('s-read-chooser');
+}
+
+
+// =====================================================================
+// KIDS BOOKS
+// =====================================================================
+let KB = { bookIdx: null, pageIdx: 0 };
+
+function buildKidsBookGrid() {
+  const grid = document.getElementById('kids-book-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  KIDS_BOOKS.forEach((book, idx) => {
+    const el = document.createElement('div');
+    el.className = 'kids-book-card';
+    el.innerHTML = `<span class="kb-icon">${book.icon}</span><div class="kb-title">${book.title}</div>`;
+    el.onclick = () => startKidsBook(idx);
+    grid.appendChild(el);
+  });
+}
+
+function startKidsBook(idx) {
+  KB.bookIdx = idx;
+  KB.pageIdx = 0;
+  const book = KIDS_BOOKS[idx];
+  document.getElementById('kids-reader-title').textContent = book.title;
+  renderBookPage();
+  go('s-kids-reader');
+}
+
+function renderBookPage() {
+  const book = KIDS_BOOKS[KB.bookIdx];
+  const page = book.pages[KB.pageIdx];
+  document.getElementById('book-page-counter').textContent =
+    `Page ${KB.pageIdx + 1} of ${book.pages.length}`;
+  document.getElementById('book-page-emoji').textContent = page.emoji;
+
+  // Split text into tappable words
+  const wordsEl = document.getElementById('book-page-words');
+  wordsEl.innerHTML = '';
+  page.text.split(' ').forEach(w => {
+    const clean = w.replace(/[^a-zA-Z'-]/g, '');
+    const span = document.createElement('span');
+    span.className = 'book-word';
+    span.textContent = w;
+    span.onclick = () => {
+      span.classList.add('speaking');
+      speak(clean, () => span.classList.remove('speaking'));
+    };
+    wordsEl.appendChild(span);
+  });
+
+  document.getElementById('book-prev-btn').disabled = KB.pageIdx === 0;
+  const isLast = KB.pageIdx === book.pages.length - 1;
+  document.getElementById('book-next-btn').textContent = isLast ? 'Finish ✓' : 'Next →';
+
+  // Auto-read the page after a short pause
+  setTimeout(() => speak(page.text), 500);
+}
+
+function bookNav(dir) {
+  const book = KIDS_BOOKS[KB.bookIdx];
+  if (dir === 1 && KB.pageIdx === book.pages.length - 1) {
+    // Book finished
+    document.getElementById('bd-title').textContent = 'You finished ' + book.title + '!';
+    document.getElementById('bd-msg').textContent = 'Amazing reading. You read every page!';
+    speak('Amazing! You finished the whole book!');
+    go('s-kids-done');
+    return;
+  }
+  KB.pageIdx = Math.max(0, Math.min(book.pages.length - 1, KB.pageIdx + dir));
+  renderBookPage();
+}
+
+function readBookPage() {
+  const book = KIDS_BOOKS[KB.bookIdx];
+  speak(book.pages[KB.pageIdx].text);
 }
 
 </script>
@@ -1646,19 +1849,70 @@ function goReading() {
         <div class="level-icon">🔤</div>
         <div class="level-info">
           <div class="level-name">Word Practice</div>
-          <div class="level-age">Great for younger readers</div>
+          <div class="level-age">Ages 5-7 · Great for beginners</div>
           <div class="level-topics">3-letter words · Picture clues · Hear the word spoken</div>
         </div>
       </div>
-      <div class="level-card l3" onclick="buildStoryTopicGrid(); go('s-story-topics')">
+      <div class="level-card l2" onclick="buildKidsBookGrid(); go('s-kids-books')">
+        <div class="level-icon">📚</div>
+        <div class="level-info">
+          <div class="level-name">Kids Books</div>
+          <div class="level-age">Ages 5-7 · Simple stories with pictures</div>
+          <div class="level-topics">Tap any word to hear it · 6 books to choose from</div>
+        </div>
+      </div>
+      <div class="level-card l3" onclick="buildStoryTopicGrid();
+buildKidsBookGrid(); go('s-story-topics')">
         <div class="level-icon">📖</div>
         <div class="level-info">
           <div class="level-name">Story Reader</div>
-          <div class="level-age">For confident readers building fluency</div>
+          <div class="level-age">Ages 14-15 · Longer stories, real vocabulary</div>
           <div class="level-topics">Sport · Gaming · Mystery · Space · Nature · Music</div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+<!-- KIDS BOOK LIST -->
+<div id="s-kids-books" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-read-chooser')">← Back</button><div class="topbar-title">Kids Books</div><div></div></div>
+  <div class="content">
+    <div class="section-label">Pick a book</div>
+    <div class="kids-book-grid" id="kids-book-grid"></div>
+  </div>
+</div>
+
+<!-- KIDS BOOK READER -->
+<div id="s-kids-reader" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-kids-books')">← Back</button><div class="topbar-title" id="kids-reader-title"></div><div></div></div>
+  <div class="content">
+    <div class="book-hint">Tap any word to hear it</div>
+    <div class="book-page-counter" id="book-page-counter"></div>
+    <div class="book-page-wrap">
+      <div class="book-page-emoji" id="book-page-emoji"></div>
+      <div class="book-page-words" id="book-page-words"></div>
+    </div>
+    <div class="book-nav">
+      <button class="book-nav-btn" id="book-prev-btn" onclick="bookNav(-1)">← Back</button>
+      <button class="book-nav-btn read-btn" onclick="readBookPage()">🔊 Read it</button>
+      <button class="book-nav-btn" id="book-next-btn" onclick="bookNav(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- KIDS BOOK DONE -->
+<div id="s-kids-done" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-kids-books')">← Back</button><div class="topbar-title">Well done!</div><div></div></div>
+  <div class="content" style="padding-top:32px">
+    <div class="book-done-card">
+      <span class="bd-emoji">📖</span>
+      <div class="bd-title" id="bd-title"></div>
+      <div class="bd-msg" id="bd-msg"></div>
+    </div>
+    <button class="btn btn-yellow" onclick="go('s-kids-books')">Read another book</button>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="go('s-home')">Home</button>
   </div>
 </div>
 
