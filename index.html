@@ -1192,15 +1192,49 @@ if ('serviceWorker' in navigator) {
 // =====================================================================
 
 // --- Text-to-speech helper ---
+let _bestVoice = null;
+
+function loadBestVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  // Priority order: NZ enhanced/premium voices first, then any NZ, then any English
+  const priority = [
+    v => v.name.includes('Matiu'),
+    v => v.name.includes('Moana'),
+    v => v.name.includes('Riona'),
+    v => v.lang === 'en-NZ' && v.localService,
+    v => v.lang === 'en-NZ',
+    v => v.lang.startsWith('en') && v.localService && !v.name.toLowerCase().includes('compact'),
+    v => v.lang.startsWith('en') && v.localService,
+    v => v.lang.startsWith('en'),
+  ];
+
+  for (const test of priority) {
+    const match = voices.find(test);
+    if (match) { _bestVoice = match; break; }
+  }
+  console.log('Voice selected:', _bestVoice ? _bestVoice.name : 'default');
+}
+
+// Voices load asynchronously on iOS -- need both triggers
+window.speechSynthesis.onvoiceschanged = loadBestVoice;
+loadBestVoice();
+
 function speak(text, onEnd) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.82;
-  utt.pitch = 1.05;
-  utt.lang = 'en-NZ';
-  if (onEnd) utt.onend = onEnd;
-  window.speechSynthesis.speak(utt);
+
+  // iOS sometimes needs a tiny delay after cancel
+  setTimeout(() => {
+    const utt = new SpeechSynthesisUtterance(text);
+    if (_bestVoice) utt.voice = _bestVoice;
+    utt.lang  = _bestVoice ? _bestVoice.lang : 'en-NZ';
+    utt.rate  = 0.88;
+    utt.pitch = 1.0;
+    if (onEnd) utt.onend = onEnd;
+    window.speechSynthesis.speak(utt);
+  }, 80);
 }
 
 // --- Activity picker on profile stats ---
