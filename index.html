@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Learn Whiz">
+<meta name="theme-color" content="#0f1923">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Learn Whiz</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0f1923;
+  --card: #1a2a3a;
+  --card2: #1e3248;
+  --card3: #243a52;
+  --yellow: #f5c842;
+  --green: #3ecf8e;
+  --blue: #4da6ff;
+  --pink: #ff6eb4;
+  --orange: #ff8c42;
+  --purple: #a78bfa;
+  --text: #f0f4f8;
+  --muted: #7a9ab5;
+  --radius: 18px;
+  --rsm: 12px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+
+/* ---- SCREENS ---- */
+.screen { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 0 16px calc(24px + var(--safe-bottom)); }
+.screen.active { display: flex; }
+
+/* ---- TOP BAR ---- */
+.topbar { width: 100%; max-width: 500px; display: flex; align-items: center; justify-content: space-between; padding: 52px 0 16px; }
+.topbar-title { font-size: 1.1rem; font-weight: 700; }
+.back-btn { background: var(--card); border: none; color: var(--text); border-radius: 99px; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+.back-btn:active { opacity: 0.7; }
+
+/* ---- CONTENT WRAP ---- */
+.content { width: 100%; max-width: 500px; flex: 1; display: flex; flex-direction: column; align-items: center; }
+
+/* ---- HOME ---- */
+.home-hero { text-align: center; padding: 40px 0 28px; }
+.home-logo { font-size: 3rem; margin-bottom: 8px; }
+.home-title { font-size: 2.2rem; font-weight: 900; color: var(--yellow); letter-spacing: -1px; }
+.home-sub { color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+
+.who-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; align-self: flex-start; }
+
+.profile-list { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.profile-row {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, background 0.15s;
+}
+.profile-row:active { background: var(--card2); }
+.profile-row.selected { border-color: var(--yellow); }
+.profile-left { display: flex; align-items: center; gap: 14px; }
+.profile-avatar { width: 44px; height: 44px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 900; flex-shrink: 0; }
+.profile-name { font-weight: 700; font-size: 1rem; }
+.profile-stats { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.profile-arrow { color: var(--muted); font-size: 1.1rem; }
+
+.add-profile-btn {
+  width: 100%;
+  background: none;
+  border: 2px dashed var(--card3);
+  border-radius: var(--radius);
+  padding: 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  margin-bottom: 24px;
+}
+.add-profile-btn:active { border-color: var(--yellow); color: var(--yellow); }
+
+/* ---- ADD PROFILE ---- */
+.add-form { width: 100%; display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.field-label { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 6px; }
+.text-input {
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--card2);
+  border-radius: var(--rsm);
+  padding: 14px 16px;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.text-input:focus { border-color: var(--blue); }
+.avatar-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+.av-opt { width: 52px; height: 52px; background: var(--card); border-radius: 99px; border: 2px solid transparent; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s; }
+.av-opt.selected { border-color: var(--yellow); }
+.color-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+.col-opt { width: 36px; height: 36px; border-radius: 99px; border: 3px solid transparent; cursor: pointer; transition: border-color 0.15s; }
+.col-opt.selected { border-color: white; }
+
+/* ---- LEVEL SELECT ---- */
+.section-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 20px 0 10px; align-self: flex-start; }
+.level-cards { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.level-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.level-card:active { background: var(--card2); }
+.level-icon { font-size: 2rem; flex-shrink: 0; }
+.level-info { flex: 1; }
+.level-name { font-weight: 700; font-size: 1rem; }
+.level-age { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.level-topics { font-size: 0.78rem; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.level-card.l1 { border-color: var(--green); }
+.level-card.l2 { border-color: var(--blue); }
+.level-card.l3 { border-color: var(--orange); }
+
+/* ---- MODE SELECT ---- */
+.mode-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mode-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.mode-card:active { background: var(--card2); }
+.mode-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+.mode-name { font-weight: 700; font-size: 0.95rem; }
+.mode-desc { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+/* ---- TOPIC SELECT ---- */
+.topic-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.topic-btn {
+  background: var(--card);
+  border-radius: var(--rsm);
+  padding: 16px 14px;
+  cursor: pointer;
+  border: 2px solid var(--card2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.topic-btn:active { border-color: var(--blue); background: var(--card2); }
+
+/* ---- LEARN ---- */
+.learn-card { background: var(--card); border-radius: var(--radius); padding: 24px; width: 100%; line-height: 1.7; margin-bottom: 16px; }
+.learn-card h3 { font-size: 1.2rem; color: var(--yellow); margin-bottom: 12px; }
+.learn-card p { color: var(--muted); font-size: 0.95rem; }
+.learn-example { background: var(--card2); border-radius: var(--rsm); padding: 14px 16px; margin-top: 14px; font-size: 1rem; font-weight: 600; }
+
+/* ---- QUIZ ---- */
+.quiz-header { width: 100%; max-width: 500px; padding: 52px 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; }
+.q-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.q-score-badge { background: var(--card); border-radius: 99px; padding: 4px 14px; font-size: 0.85rem; font-weight: 700; color: var(--yellow); }
+.progress-track { width: 100%; height: 6px; background: var(--card); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s; }
+
+.question-card { background: var(--card); border-radius: var(--radius); padding: 28px 20px; width: 100%; text-align: center; margin-bottom: 16px; }
+.question-text { font-size: 1.8rem; font-weight: 800; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+.question-hint { font-size: 0.85rem; color: var(--muted); margin-top: 8px; }
+.emoji-count { font-size: 2rem; line-height: 1.7; white-space: pre-wrap; display: block; margin-top: 8px; }
+
+.mc-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.mc-btn {
+  background: var(--card);
+  border-radius: var(--rsm);
+  padding: 20px 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--card2);
+  color: var(--text);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.mc-btn:active:not(:disabled) { transform: scale(0.97); }
+.mc-btn.correct { border-color: var(--green); background: rgba(62,207,142,0.12); color: var(--green); }
+.mc-btn.wrong { border-color: var(--pink); background: rgba(255,110,180,0.1); color: var(--pink); }
+
+.type-wrap { width: 100%; display: flex; gap: 10px; margin-bottom: 14px; }
+.type-input {
+  flex: 1;
+  background: var(--card);
+  border: 2px solid var(--card2);
+  border-radius: var(--rsm);
+  padding: 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.type-input:focus { border-color: var(--blue); }
+.type-input.correct { border-color: var(--green); }
+.type-input.wrong { border-color: var(--pink); }
+.check-btn { background: var(--blue); color: #fff; border: none; border-radius: var(--rsm); padding: 16px 22px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.check-btn:active { opacity: 0.8; }
+
+.feedback { font-size: 1rem; font-weight: 700; text-align: center; min-height: 24px; margin-bottom: 10px; }
+.feedback.good { color: var(--green); }
+.feedback.bad { color: var(--pink); }
+
+.explain-box { background: var(--card2); border-radius: var(--rsm); padding: 14px 16px; width: 100%; font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; display: none; }
+.explain-box strong { color: var(--text); }
+
+.next-btn { width: 100%; background: var(--green); color: #0f1923; border: none; border-radius: var(--rsm); padding: 18px; font-size: 1rem; font-weight: 800; cursor: pointer; display: none; }
+.next-btn:active { opacity: 0.85; }
+
+/* ---- RESULTS ---- */
+.results-card { background: var(--card); border-radius: var(--radius); padding: 32px 24px; width: 100%; text-align: center; margin-bottom: 20px; }
+.results-emoji { font-size: 3rem; margin-bottom: 8px; }
+.results-big { font-size: 4rem; font-weight: 900; color: var(--yellow); line-height: 1; }
+.results-of { font-size: 1rem; color: var(--muted); margin-top: 4px; }
+.results-stars { font-size: 1.8rem; margin: 12px 0; letter-spacing: 4px; }
+.results-msg { font-size: 1rem; font-weight: 600; color: var(--text); }
+.results-pct { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+
+.history-section { width: 100%; margin-top: 8px; }
+.history-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+.history-row { display: flex; justify-content: space-between; align-items: center; background: var(--card); border-radius: var(--rsm); padding: 12px 16px; margin-bottom: 8px; }
+.history-row .htopic { font-weight: 600; font-size: 0.9rem; }
+.history-row .hdetail { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.history-score { font-weight: 700; color: var(--yellow); font-size: 0.95rem; }
+
+/* ---- PROFILE STATS SCREEN ---- */
+.stats-header { text-align: center; padding: 16px 0 24px; }
+.stats-avatar { width: 72px; height: 72px; border-radius: 99px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; margin: 0 auto 10px; }
+.stats-name { font-size: 1.5rem; font-weight: 800; }
+.stats-sub { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+.stats-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-box { background: var(--card); border-radius: var(--rsm); padding: 16px; text-align: center; }
+.stat-num { font-size: 1.8rem; font-weight: 900; color: var(--yellow); }
+.stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+.delete-btn { background: none; border: 2px solid rgba(255,110,180,0.3); border-radius: var(--rsm); color: var(--pink); padding: 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; }
+.delete-btn:active { background: rgba(255,110,180,0.1); }
+
+/* ---- BUTTONS ---- */
+.btn { border: none; border-radius: var(--rsm); padding: 16px 24px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-bottom: 10px; }
+.btn:active { opacity: 0.85; }
+.btn-yellow { background: var(--yellow); color: #0f1923; }
+.btn-ghost { background: var(--card); color: var(--text); border: 2px solid var(--card2); }
+.btn-blue { background: var(--blue); color: #fff; }
+
+/* ---- INSTALL BANNER ---- */
+.install-banner { display: none; position: fixed; bottom: calc(16px + var(--safe-bottom)); left: 16px; right: 16px; background: var(--card2); border-radius: var(--radius); padding: 14px 18px; z-index: 100; flex-direction: column; gap: 10px; border: 1px solid var(--card3); }
+.install-banner.show { display: flex; }
+.install-text { font-size: 0.9rem; color: var(--text); font-weight: 600; }
+.install-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.install-btns { display: flex; gap: 8px; }
+.install-yes { background: var(--yellow); color: #0f1923; border: none; border-radius: var(--rsm); padding: 10px 20px; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+.install-no { background: none; border: none; color: var(--muted); font-size: 0.85rem; cursor: pointer; padding: 10px; }
+
+@media (min-width: 520px) {
+  .mc-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* =====================================================================
+   READING MODULE STYLES
+   ===================================================================== */
+
+/* --- Home screen activity picker --- */
+.activity-tabs { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
+.activity-tab {
+  flex: 1; border: none; border-radius: var(--rsm); padding: 12px 8px;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.activity-tab.maths  { background: var(--card); color: var(--muted); }
+.activity-tab.read   { background: var(--card); color: var(--muted); }
+.activity-tab.active { background: var(--yellow); color: #0f1923; }
+
+/* --- Word practice (5 yr old) --- */
+.word-card {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 32px 20px; text-align: center; margin-bottom: 20px;
+}
+.word-emoji { font-size: 5rem; display: block; margin-bottom: 16px; line-height: 1; }
+.word-display {
+  font-size: 3rem; font-weight: 900; letter-spacing: 6px;
+  color: var(--yellow); margin-bottom: 16px; font-family: 'Courier New', monospace;
+}
+.word-speak-btn {
+  background: var(--blue); border: none; border-radius: 99px;
+  padding: 12px 28px; font-size: 1rem; font-weight: 700;
+  color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+}
+.word-speak-btn:active { opacity: 0.8; }
+.word-choices { display: flex; flex-direction: column; gap: 12px; width: 100%; margin-bottom: 16px; }
+.word-choice-btn {
+  background: var(--card); border: 2px solid var(--card2); border-radius: var(--rsm);
+  padding: 18px; font-size: 1.8rem; font-weight: 900; letter-spacing: 4px;
+  cursor: pointer; color: var(--text); font-family: 'Courier New', monospace;
+  transition: border-color 0.15s, background 0.15s;
+}
+.word-choice-btn:active:not(:disabled) { background: var(--card2); }
+.word-choice-btn.correct { border-color: var(--green); background: rgba(62,207,142,0.12); color: var(--green); }
+.word-choice-btn.wrong   { border-color: var(--pink);  background: rgba(255,110,180,0.1);  color: var(--pink); }
+.word-progress { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+.word-well-done {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 32px 24px; text-align: center; margin-bottom: 20px;
+}
+.word-well-done .wd-emoji { font-size: 3rem; margin-bottom: 12px; display: block; }
+.word-well-done .wd-title { font-size: 1.6rem; font-weight: 900; color: var(--yellow); }
+.word-well-done .wd-sub   { color: var(--muted); margin-top: 8px; font-size: 0.95rem; }
+
+/* --- Story reader (15 yr old) --- */
+.story-topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.story-topic-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 20px 16px; text-align: center; cursor: pointer;
+  border: 2px solid transparent; transition: border-color 0.15s, background 0.15s;
+}
+.story-topic-card:active { background: var(--card2); }
+.story-topic-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+.story-topic-name { font-weight: 700; font-size: 0.95rem; }
+
+.story-meta { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px; }
+.story-title-lbl { font-size: 1rem; font-weight: 700; color: var(--yellow); flex: 1; }
+.story-read-all-btn {
+  background: var(--card); border: none; border-radius: 99px;
+  padding: 8px 16px; color: var(--muted); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.story-read-all-btn:active { color: var(--text); }
+
+.sentence-display {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 28px 20px; margin-bottom: 16px; min-height: 140px;
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+}
+.s-word {
+  font-size: 1.5rem; font-weight: 600; padding: 4px 2px;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s; line-height: 1.6;
+  border-radius: 4px;
+}
+.s-word:active, .s-word.speaking { color: var(--blue); border-bottom-color: var(--blue); }
+
+.story-nav { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px; gap: 10px; }
+.story-nav-btn {
+  background: var(--card); border: none; border-radius: var(--rsm);
+  padding: 14px 20px; font-size: 0.95rem; font-weight: 700;
+  color: var(--text); cursor: pointer; flex: 1;
+}
+.story-nav-btn:active { background: var(--card2); }
+.story-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.story-nav-btn.speak { background: var(--blue); color: #fff; flex: 1.5; }
+.sentence-counter { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 8px; width: 100%; }
+
+.story-hint { background: var(--card2); border-radius: var(--rsm); padding: 12px 16px; width: 100%; font-size: 0.85rem; color: var(--muted); text-align: center; margin-bottom: 12px; }
+
+.story-done-card {
+  background: var(--card); border-radius: var(--radius);
+  width: 100%; padding: 28px 24px; text-align: center; margin-bottom: 20px;
+}
+.story-done-card .sd-emoji  { font-size: 3rem; display: block; margin-bottom: 10px; }
+.story-done-card .sd-title  { font-size: 1.4rem; font-weight: 900; color: var(--yellow); }
+.story-done-card .sd-msg    { color: var(--muted); margin-top: 8px; font-size: 0.95rem; line-height: 1.5; }
+
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="content">
+    <div class="home-hero">
+      <div class="home-logo">🧮</div>
+      <div class="home-title">Learn Whiz</div>
+      <div class="home-sub">Maths &amp; Reading · Pick who's playing</div>
+    </div>
+    <div class="who-label">Profiles</div>
+    <div class="profile-list" id="profile-list"></div>
+    <button class="add-profile-btn" onclick="go('s-add-profile')">+ Add a profile</button>
+  </div>
+</div>
+
+<!-- ADD PROFILE -->
+<div id="s-add-profile" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title">New Profile</div><div></div></div>
+  <div class="content">
+    <div class="add-form">
+      <div>
+        <div class="field-label">Name</div>
+        <input class="text-input" id="new-name" type="text" placeholder="e.g. Lily" maxlength="20">
+      </div>
+      <div>
+        <div class="field-label">Pick an avatar</div>
+        <div class="avatar-picker" id="avatar-picker"></div>
+      </div>
+      <div>
+        <div class="field-label">Pick a colour</div>
+        <div class="color-picker" id="color-picker"></div>
+      </div>
+      <button class="btn btn-yellow" onclick="saveProfile()">Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE STATS -->
+<div id="s-profile-stats" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title">Stats</div><div></div></div>
+  <div class="content">
+    <div class="stats-header">
+      <div class="stats-avatar" id="stats-avatar"></div>
+      <div class="stats-name" id="stats-name"></div>
+      <div class="stats-sub" id="stats-sub"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-num" id="stat-played">0</div><div class="stat-lbl">Quizzes played</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-avg">0%</div><div class="stat-lbl">Average score</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-best">0%</div><div class="stat-lbl">Best score</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-streak">0</div><div class="stat-lbl">Current streak 🔥</div></div>
+    </div>
+    <div class="history-section">
+      <div class="history-title">Recent sessions</div>
+      <div id="stats-history"></div>
+    </div>
+    <div class="section-label" style="margin-top:16px">What would you like to do?</div>
+    <div class="activity-tabs">
+      <button class="activity-tab maths active" id="tab-maths" onclick="pickActivity('maths')">🔢 Maths</button>
+      <button class="activity-tab read"  id="tab-read"  onclick="pickActivity('read')">📖 Reading</button>
+    </div>
+    <div id="activity-maths-btn">
+      <button class="btn btn-yellow" onclick="go('s-level')">Start Maths →</button>
+    </div>
+    <div id="activity-read-btn" style="display:none; width:100%">
+      <button class="btn btn-yellow" id="read-go-btn" onclick="goReading()">Start Reading →</button>
+    </div>
+    <button class="delete-btn" onclick="deleteProfile()">Remove this profile</button>
+  </div>
+</div>
+
+<!-- LEVEL SELECT -->
+<div id="s-level" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title" id="level-topbar-name"></div><div></div></div>
+  <div class="content">
+    <div class="section-label">Choose your level</div>
+    <div class="level-cards">
+      <div class="level-card l1" onclick="selectLevel(1)">
+        <div class="level-icon">🌱</div>
+        <div class="level-info">
+          <div class="level-name">Starter</div>
+          <div class="level-age">Ages 5–7</div>
+          <div class="level-topics">Counting · Adding · Subtracting · Shapes · Numbers to 20</div>
+        </div>
+      </div>
+      <div class="level-card l2" onclick="selectLevel(2)">
+        <div class="level-icon">⚡</div>
+        <div class="level-info">
+          <div class="level-name">Explorer</div>
+          <div class="level-age">Ages 8–10</div>
+          <div class="level-topics">Times Tables · Fractions · Place Value · Division · Word Problems</div>
+        </div>
+      </div>
+      <div class="level-card l3" onclick="selectLevel(3)">
+        <div class="level-icon">🔭</div>
+        <div class="level-info">
+          <div class="level-name">Challenger</div>
+          <div class="level-age">Ages 14–15</div>
+          <div class="level-topics">Algebra · Geometry · Equations · Percentages · Statistics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODE SELECT -->
+<div id="s-mode" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-level')">← Back</button><div class="topbar-title" id="mode-level-label"></div><div></div></div>
+  <div class="content">
+    <div class="section-label">What do you want to do?</div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="selectMode('practice')"><span class="mode-icon">🎯</span><div class="mode-name">Practice</div><div class="mode-desc">10 questions</div></div>
+      <div class="mode-card" onclick="selectMode('learn')"><span class="mode-icon">📖</span><div class="mode-name">Learn It</div><div class="mode-desc">Read then try</div></div>
+      <div class="mode-card" onclick="selectMode('drill')"><span class="mode-icon">🔁</span><div class="mode-name">Drill</div><div class="mode-desc">20 fast questions</div></div>
+      <div class="mode-card" onclick="selectMode('challenge')"><span class="mode-icon">🏆</span><div class="mode-name">Challenge</div><div class="mode-desc">Beat your best</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPIC SELECT -->
+<div id="s-topic" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-mode')">← Back</button><div class="topbar-title">Choose Topic</div><div></div></div>
+  <div class="content">
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div id="s-learn" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-topic')">← Back</button><div class="topbar-title" id="learn-title-bar"></div><div></div></div>
+  <div class="content">
+    <div class="learn-card" id="learn-body"></div>
+    <button class="btn btn-yellow" onclick="startQuiz()">Practice this topic →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="s-quiz" class="screen">
+  <div class="quiz-header" id="quiz-header">
+    <div class="quiz-meta">
+      <span class="q-label" id="q-label">Question 1 of 10</span>
+      <span class="q-score-badge">⭐ <span id="q-score">0</span></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="content">
+    <div class="question-card">
+      <div class="question-text" id="q-text"></div>
+      <div class="question-hint" id="q-hint"></div>
+    </div>
+    <div class="mc-grid" id="mc-grid"></div>
+    <div class="type-wrap" id="type-wrap" style="display:none">
+      <input class="type-input" id="type-in" inputmode="decimal" type="text" placeholder="Answer" autocomplete="off">
+      <button class="check-btn" onclick="submitTyped()">✓</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="explain-box" id="explain-box"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">Next →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="s-results" class="screen">
+  <div class="topbar"><div></div><div class="topbar-title">Done!</div><div></div></div>
+  <div class="content">
+    <div class="results-card">
+      <div class="results-emoji" id="res-emoji"></div>
+      <div class="results-big" id="res-score"></div>
+      <div class="results-of" id="res-of"></div>
+      <div class="results-stars" id="res-stars"></div>
+      <div class="results-msg" id="res-msg"></div>
+      <div class="results-pct" id="res-pct"></div>
+    </div>
+    <div class="history-section">
+      <div class="history-title">Recent for this topic</div>
+      <div id="topic-history"></div>
+    </div>
+    <button class="btn btn-yellow" onclick="playAgain()">Play Again</button>
+    <button class="btn btn-ghost" onclick="go('s-level')">Change Level</button>
+    <button class="btn btn-ghost" onclick="go('s-home')">Home</button>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <div><div class="install-text">📲 Add Maths Whiz to your home screen</div><div class="install-sub">Works offline, feels like a real app</div></div>
+  <div class="install-btns">
+    <button class="install-yes" id="install-yes-btn">Add to Home Screen</button>
+    <button class="install-no" onclick="dismissInstall()">Not now</button>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// CONSTANTS
+// =====================================================================
+const AVATARS = ['🦁','🐯','🐻','🦊','🐸','🐧','🦄','🐙','🦋','🐢','🐠','🦕'];
+const COLORS  = ['#f5c842','#3ecf8e','#4da6ff','#ff6eb4','#ff8c42','#a78bfa','#38bdf8','#f87171'];
+
+const LEVELS = {
+  1: { name: 'Starter',    icon: '🌱', topics: ['Counting','Adding','Subtracting','Shapes','Numbers to 20'] },
+  2: { name: 'Explorer',   icon: '⚡', topics: ['Times Tables','Fractions','Place Value','Division','Word Problems'] },
+  3: { name: 'Challenger', icon: '🔭', topics: ['Algebra','Geometry','Equations','Percentages','Statistics'] }
+};
+
+const LEARN_DATA = {
+  'Counting':       { body: 'Counting means saying numbers in order: 1, 2, 3... Point to each object as you count.', example: '🍎🍎🍎🍎🍎 = 5 apples' },
+  'Adding':         { body: 'Adding means putting numbers together to get a bigger number. We use the + sign.', example: '3 + 4 = 7  (3 fingers + 4 fingers = 7)' },
+  'Subtracting':    { body: 'Subtracting means taking away. We use the − sign. Start at the big number and count back.', example: '8 − 3 = 5  (start at 8, count back 3)' },
+  'Shapes':         { body: 'Shapes have sides and corners. A triangle has 3 sides, a square has 4 equal sides.', example: '🔺 Triangle: 3 sides   🟦 Square: 4 equal sides' },
+  'Numbers to 20':  { body: 'After 10 comes 11 (ten-and-one), 12 (ten-and-two), all the way to 20.', example: '10 + 5 = 15   10 + 9 = 19' },
+  'Times Tables':   { body: 'Multiplication is fast adding of equal groups. 3 × 4 means three groups of four.', example: '3 × 4 = 12  (4 + 4 + 4 = 12)' },
+  'Fractions':      { body: 'A fraction shows part of a whole. Bottom number = total parts, top = how many you have.', example: '½ of 8 = 4  (split 8 into 2 equal parts)' },
+  'Place Value':    { body: 'Each digit has a place: ones, tens, hundreds. Position tells you its value.', example: 'In 347:  3 = 300,  4 = 40,  7 = 7' },
+  'Division':       { body: 'Division is sharing equally. 12 ÷ 3 asks: how many groups of 3 fit into 12?', example: '20 ÷ 4 = 5  (20 shared into 4 equal groups)' },
+  'Word Problems':  { body: 'Read carefully. Find the numbers, decide add/subtract/multiply/divide, then solve.', example: 'Sam has 12 apples, gives 4 away → 12 − 4 = 8' },
+  'Algebra':        { body: 'Algebra uses letters for unknown numbers. Solve by working out what the letter equals.', example: 'x + 5 = 12 → x = 7  (because 7 + 5 = 12)' },
+  'Geometry':       { body: 'Geometry is the maths of shapes and space. Triangle angles add to 180°. Area = length × width.', example: 'Rectangle 6 × 4 = 24 cm²' },
+  'Equations':      { body: 'To solve an equation, do the same operation to both sides to isolate the unknown.', example: '2x − 3 = 11 → 2x = 14 → x = 7' },
+  'Percentages':    { body: 'Percent means "out of 100". Multiply by the decimal version to find the percentage.', example: '20% of 80 = 0.20 × 80 = 16' },
+  'Statistics':     { body: 'Mean = sum ÷ count. Median = middle value when sorted. Mode = most common.', example: '3,5,7,7,8 → Mean = 6,  Mode = 7,  Median = 7' }
+};
+
+// =====================================================================
+// UTILS
+// =====================================================================
+const rand = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const pick = arr => arr[rand(0, arr.length - 1)];
+const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+// =====================================================================
+// STORAGE
+// =====================================================================
+const DB_KEY = 'mw_data_v2';
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  // migrate from old key if present
+  try {
+    const old = localStorage.getItem('mw_data');
+    if (old) { const d = JSON.parse(old); saveData(d); return d; }
+  } catch(e) {}
+  return { profiles: [] };
+}
+
+function saveData(d) {
+  try {
+    const str = JSON.stringify(d);
+    localStorage.setItem(DB_KEY, str);
+    // verify write succeeded (iOS PWA can silently fail)
+    const verify = localStorage.getItem(DB_KEY);
+    if (!verify) throw new Error('verify failed');
+  } catch(e) {
+    // sessionStorage as fallback so data survives within session
+    try { sessionStorage.setItem(DB_KEY, JSON.stringify(d)); } catch(e2) {}
+    console.warn('Storage write issue:', e);
+  }
+}
+
+function getProfile(id) { return loadData().profiles.find(p => p.id === id); }
+
+function saveResult(profileId, result) {
+  const d = loadData();
+  const p = d.profiles.find(p => p.id === profileId);
+  if (!p) return;
+  if (!p.history) p.history = [];
+  p.history.unshift(result);
+  if (p.history.length > 50) p.history = p.history.slice(0, 50);
+  // streak
+  const today = new Date().toDateString();
+  if (p.lastPlayed !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    p.streak = (p.lastPlayed === yesterday) ? (p.streak || 0) + 1 : 1;
+    p.lastPlayed = today;
+  }
+  saveData(d);
+}
+
+// =====================================================================
+// APP STATE
+// =====================================================================
+let S = { profileId: null, level: null, mode: null, topic: null, questions: [], current: 0, score: 0, answered: false };
+
+// =====================================================================
+// NAV
+// =====================================================================
+function go(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// =====================================================================
+// HOME
+// =====================================================================
+function renderHome() {
+  const d = loadData();
+  const list = document.getElementById('profile-list');
+  list.innerHTML = '';
+  if (d.profiles.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.9rem;text-align:center;padding:16px 0">No profiles yet. Add one below.</div>';
+    return;
+  }
+  d.profiles.forEach(p => {
+    const played = (p.history || []).length;
+    const avgPct = played ? Math.round((p.history.reduce((a,h) => a + h.pct, 0) / played)) : 0;
+    const row = document.createElement('div');
+    row.className = 'profile-row';
+    row.innerHTML = `
+      <div class="profile-left">
+        <div class="profile-avatar" style="background:${p.color}22;color:${p.color}">${p.avatar}</div>
+        <div>
+          <div class="profile-name">${p.name}</div>
+          <div class="profile-stats">${played ? `${played} quiz${played!==1?'es':''} · avg ${avgPct}%` : 'No quizzes yet'}</div>
+        </div>
+      </div>
+      <div class="profile-arrow">›</div>`;
+    row.onclick = () => selectProfile(p.id);
+    list.appendChild(row);
+  });
+}
+
+function selectProfile(id) {
+  S.profileId = id;
+  const p = getProfile(id);
+  // Show stats screen
+  document.getElementById('stats-avatar').textContent = p.avatar;
+  document.getElementById('stats-avatar').style.background = p.color + '22';
+  document.getElementById('stats-avatar').style.color = p.color;
+  document.getElementById('stats-name').textContent = p.name;
+  const hist = p.history || [];
+  const played = hist.length;
+  const avg = played ? Math.round(hist.reduce((a,h) => a+h.pct,0)/played) : 0;
+  const best = played ? Math.max(...hist.map(h=>h.pct)) : 0;
+  document.getElementById('stats-sub').textContent = played ? `${played} quiz${played!==1?'es':''} completed` : 'No quizzes yet';
+  document.getElementById('stat-played').textContent = played;
+  document.getElementById('stat-avg').textContent = avg + '%';
+  document.getElementById('stat-best').textContent = best + '%';
+  document.getElementById('stat-streak').textContent = p.streak || 0;
+  const histDiv = document.getElementById('stats-history');
+  if (hist.length === 0) {
+    histDiv.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:8px 0">No history yet.</div>';
+  } else {
+    histDiv.innerHTML = hist.slice(0, 6).map(h => `
+      <div class="history-row">
+        <div><div class="htopic">${h.topic}</div><div class="hdetail">${h.mode} · ${h.date}</div></div>
+        <div class="history-score">${h.score}/${h.total} (${h.pct}%)</div>
+      </div>`).join('');
+  }
+  document.getElementById('level-topbar-name').textContent = p.name;
+  go('s-profile-stats');
+}
+
+function deleteProfile() {
+  if (!confirm('Remove this profile and all their history?')) return;
+  const d = loadData();
+  d.profiles = d.profiles.filter(p => p.id !== S.profileId);
+  saveData(d);
+  go('s-home');
+  renderHome();
+
+}
+
+// =====================================================================
+// ADD PROFILE
+// =====================================================================
+let newAv = AVATARS[0], newCol = COLORS[0];
+
+function initAddProfile() {
+  document.getElementById('new-name').value = '';
+  newAv = AVATARS[0]; newCol = COLORS[0];
+
+  const avPicker = document.getElementById('avatar-picker');
+  avPicker.innerHTML = '';
+  AVATARS.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'av-opt' + (a === newAv ? ' selected' : '');
+    el.textContent = a;
+    el.onclick = () => { newAv = a; avPicker.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); };
+    avPicker.appendChild(el);
+  });
+
+  const colPicker = document.getElementById('color-picker');
+  colPicker.innerHTML = '';
+  COLORS.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'col-opt' + (c === newCol ? ' selected' : '');
+    el.style.background = c;
+    el.onclick = () => { newCol = c; colPicker.querySelectorAll('.col-opt').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); };
+    colPicker.appendChild(el);
+  });
+}
+
+function saveProfile() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { alert('Please enter a name.'); return; }
+  const d = loadData();
+  d.profiles.push({ id: Date.now().toString(), name, avatar: newAv, color: newCol, history: [], streak: 0, lastPlayed: null });
+  saveData(d);
+  go('s-home');
+  renderHome();
+
+}
+
+// =====================================================================
+// LEVEL / MODE / TOPIC
+// =====================================================================
+function selectLevel(lvl) {
+  S.level = lvl;
+  document.getElementById('mode-level-label').textContent = LEVELS[lvl].icon + ' ' + LEVELS[lvl].name;
+  go('s-mode');
+}
+
+function selectMode(mode) {
+  S.mode = mode;
+  buildTopicGrid(mode === 'learn');
+  go('s-topic');
+}
+
+function buildTopicGrid(learnMode) {
+  const grid = document.getElementById('topic-grid');
+  grid.innerHTML = '';
+  LEVELS[S.level].topics.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.textContent = t;
+    btn.onclick = () => selectTopic(t, learnMode);
+    grid.appendChild(btn);
+  });
+}
+
+function selectTopic(topic, learnMode) {
+  S.topic = topic;
+  if (learnMode) showLearn();
+  else startQuiz();
+}
+
+function showLearn() {
+  const d = LEARN_DATA[S.topic] || { body: 'Keep practising this topic.', example: '' };
+  document.getElementById('learn-title-bar').textContent = S.topic;
+  document.getElementById('learn-body').innerHTML = `
+    <h3>${S.topic}</h3>
+    <p>${d.body}</p>
+    ${d.example ? `<div class="learn-example">${d.example}</div>` : ''}`;
+  go('s-learn');
+}
+
+// =====================================================================
+// QUESTION GENERATORS
+// =====================================================================
+function makeWrongs(correct, n) {
+  const s = new Set();
+  let attempts = 0;
+  while (s.size < n && attempts < 100) {
+    attempts++;
+    let w = correct + pick([-3,-2,-1,1,2,3,5,10,-5,-10]);
+    if (w !== correct && w >= 0) s.add(w);
+  }
+  return [...s].slice(0, n);
+}
+
+const GEN = {
+  'Counting': () => {
+    const n = rand(1,10), em = pick(['🍎','🌟','🐸','🎈','🍭','⭐','🔵','🍓','🐥','🌈']);
+    const rows = [];
+    for (let i = 0; i < n; i += 5) rows.push(em.repeat(Math.min(5, n - i)));
+    const display = rows.join('\n');
+    return { q: `How many?\n${display}`, a: n, hint: 'Count each one', explain: `There are <strong>${n}</strong>.` };
+  },
+  'Adding': () => {
+    const a=rand(1,12),b=rand(1,12);
+    return { q: `${a} + ${b} = ?`, a: a+b, hint: 'Add the two numbers', explain: `<strong>${a} + ${b} = ${a+b}</strong>` };
+  },
+  'Subtracting': () => {
+    const b=rand(1,9),a=rand(b,15);
+    return { q: `${a} − ${b} = ?`, a: a-b, hint: 'Take away', explain: `<strong>${a} − ${b} = ${a-b}</strong>. Count back ${b} from ${a}.` };
+  },
+  'Numbers to 20': () => {
+    const a=rand(1,10),b=rand(1,10);
+    if(a+b>20) return GEN['Numbers to 20']();
+    return { q: `${a} + ${b} = ?`, a: a+b, hint: 'Answer is between 1 and 20', explain: `<strong>${a} + ${b} = ${a+b}</strong>` };
+  },
+  'Shapes': () => {
+    return pick([
+      { q: 'How many sides does a triangle have?', a: 3, explain: 'A <strong>triangle</strong> has <strong>3 sides</strong>.' },
+      { q: 'How many sides does a square have?', a: 4, explain: 'A <strong>square</strong> has <strong>4 equal sides</strong>.' },
+      { q: 'How many corners does a triangle have?', a: 3, explain: 'A triangle has <strong>3 corners</strong>.' },
+      { q: 'How many sides does a rectangle have?', a: 4, explain: 'A <strong>rectangle</strong> has <strong>4 sides</strong>.' },
+      { q: 'How many sides does a pentagon have?', a: 5, explain: 'A <strong>pentagon</strong> has <strong>5 sides</strong>.' },
+      { q: 'How many sides does a hexagon have?', a: 6, explain: 'A <strong>hexagon</strong> has <strong>6 sides</strong>.' },
+    ]);
+  },
+  'Times Tables': () => {
+    const a=rand(2,12),b=rand(2,12);
+    return { q: `${a} × ${b} = ?`, a: a*b, hint: 'Times tables', explain: `<strong>${a} × ${b} = ${a*b}</strong>` };
+  },
+  'Fractions': () => {
+    const d=pick([2,3,4,5,10]),total=d*rand(1,6);
+    return { q: `1/${d} of ${total} = ?`, a: total/d, hint: 'Divide by the bottom number', explain: `1/${d} of ${total} = ${total} ÷ ${d} = <strong>${total/d}</strong>` };
+  },
+  'Place Value': () => {
+    const n=rand(100,999);
+    return pick([
+      { q: `Hundreds digit of ${n}?`, a: Math.floor(n/100), explain: `In ${n}, hundreds digit = <strong>${Math.floor(n/100)}</strong>` },
+      { q: `Tens digit of ${n}?`, a: Math.floor((n%100)/10), explain: `In ${n}, tens digit = <strong>${Math.floor((n%100)/10)}</strong>` },
+      { q: `Ones digit of ${n}?`, a: n%10, explain: `In ${n}, ones digit = <strong>${n%10}</strong>` },
+    ]);
+  },
+  'Division': () => {
+    const b=rand(2,9),a=b*rand(2,12);
+    return { q: `${a} ÷ ${b} = ?`, a: a/b, hint: 'Share equally', explain: `<strong>${a} ÷ ${b} = ${a/b}</strong>` };
+  },
+  'Word Problems': () => {
+    return pick([
+      () => { const a=rand(5,20),b=rand(1,a); return {q:`Sam has ${a} apples and eats ${b}. How many left?`, a:a-b, explain:`${a} − ${b} = <strong>${a-b}</strong>`}; },
+      () => { const a=rand(2,6),b=rand(2,8); return {q:`${a} bags with ${b} oranges each. How many total?`, a:a*b, explain:`${a} × ${b} = <strong>${a*b}</strong>`}; },
+      () => { const b=rand(2,5),a=b*rand(2,8); return {q:`${a} students split into groups of ${b}. How many groups?`, a:a/b, explain:`${a} ÷ ${b} = <strong>${a/b}</strong>`}; },
+      () => { const a=rand(10,30),b=rand(1,10); return {q:`A bag costs $${a}. You pay $${a+b}. Change?`, a:b, explain:`$${a+b} − $${a} = <strong>$${b}</strong>`}; },
+    ])();
+  },
+  'Algebra': () => {
+    const x=rand(1,12),b=rand(1,10);
+    return pick([
+      { q: `x + ${b} = ${x+b}\nFind x`, a: x, hint: 'What does x equal?', explain: `x + ${b} = ${x+b} → x = ${x+b} − ${b} = <strong>${x}</strong>` },
+      { q: `${b}x = ${b*x}\nFind x`, a: x, hint: 'Divide both sides', explain: `${b}x = ${b*x} → x = ${b*x} ÷ ${b} = <strong>${x}</strong>` },
+      { q: `x − ${b} = ${x}\nFind x`, a: x+b, hint: 'Add to both sides', explain: `x = ${x} + ${b} = <strong>${x+b}</strong>` },
+    ]);
+  },
+  'Equations': () => {
+    const x=rand(1,10),a=rand(2,5),b=rand(1,8);
+    return { q: `${a}x + ${b} = ${a*x+b}\nFind x`, a: x, hint: 'Isolate x', explain: `${a}x = ${a*x+b-b} → x = <strong>${x}</strong>` };
+  },
+  'Geometry': () => {
+    return pick([
+      () => { const l=rand(2,12),w=rand(2,12); return {q:`Area of rectangle\nlength ${l} cm, width ${w} cm`, a:l*w, hint:'Area = length × width', explain:`${l} × ${w} = <strong>${l*w} cm²</strong>`}; },
+      () => { const a=rand(30,70),b=rand(30,70); const c=180-a-b; if(c<=0) return GEN['Geometry'](); return {q:`Triangle angles: ${a}° and ${b}°\nThird angle?`, a:c, hint:'Angles sum to 180°', explain:`180 − ${a} − ${b} = <strong>${c}°</strong>`}; },
+      () => { const s=rand(3,12); return {q:`Perimeter of square\nside = ${s} cm`, a:4*s, hint:'Perimeter = 4 × side', explain:`4 × ${s} = <strong>${4*s} cm</strong>`}; },
+      () => { const b=rand(2,10),h=rand(2,10); return {q:`Area of triangle\nbase ${b} cm, height ${h} cm`, a:(b*h)/2, hint:'Area = ½ × base × height', explain:`½ × ${b} × ${h} = <strong>${b*h/2} cm²</strong>`}; },
+    ])();
+  },
+  'Percentages': () => {
+    const p=pick([10,20,25,50,75]),base=rand(1,10)*10;
+    return { q: `${p}% of ${base} = ?`, a: (p/100)*base, hint: 'Multiply by the decimal', explain: `${p}% = ${p/100} → ${p/100} × ${base} = <strong>${(p/100)*base}</strong>` };
+  },
+  'Statistics': () => {
+    const nums=[rand(2,9),rand(2,9),rand(2,9),rand(2,9),rand(2,9)];
+    const sum=nums.reduce((a,b)=>a+b,0);
+    const mean=Math.round(sum/nums.length*10)/10;
+    const sorted=[...nums].sort((a,b)=>a-b);
+    const median=sorted[2];
+    return pick([
+      { q: `Data: ${nums.join(', ')}\nWhat is the mean?`, a: mean, hint: 'Sum ÷ count', explain: `Sum = ${sum}, count = 5 → Mean = <strong>${mean}</strong>` },
+      { q: `Data: ${nums.join(', ')}\nWhat is the median?`, a: median, hint: 'Sort then find the middle', explain: `Sorted: ${sorted.join(', ')} → Middle = <strong>${median}</strong>` },
+    ]);
+  }
+};
+
+// =====================================================================
+// QUIZ
+// =====================================================================
+function startQuiz() {
+  const total = S.mode === 'drill' ? 20 : S.mode === 'challenge' ? 15 : 10;
+  const gen = GEN[S.topic];
+  if (!gen) { alert('Questions coming soon for this topic!'); return; }
+  S.questions = [];
+  for (let i = 0; i < total; i++) S.questions.push(gen());
+  S.current = 0; S.score = 0; S.answered = false;
+  renderQ();
+  go('s-quiz');
+}
+
+function renderQ() {
+  const q = S.questions[S.current];
+  const total = S.questions.length;
+  S.answered = false;
+
+  document.getElementById('q-label').textContent = `Question ${S.current+1} of ${total}`;
+  document.getElementById('prog-fill').style.width = `${(S.current/total)*100}%`;
+  document.getElementById('q-score').textContent = S.score;
+  // For counting questions split into "How many?" label + big emoji rows
+  const qtEl = document.getElementById('q-text');
+  if (q.q.startsWith('How many?')) {
+    const parts = q.q.split('\n');
+    qtEl.innerHTML = parts[0] + '<span class="emoji-count">' + parts.slice(1).join('\n') + '</span>';
+  } else {
+    qtEl.textContent = q.q;
+  }
+  document.getElementById('q-hint').textContent = q.hint || '';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('explain-box').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const useMC = typeof q.a === 'number' && Number.isInteger(q.a) && q.a <= 300 && q.a >= 0;
+
+  if (useMC) {
+    document.getElementById('mc-grid').style.display = 'grid';
+    document.getElementById('type-wrap').style.display = 'none';
+    const wrongs = makeWrongs(q.a, 3);
+    const opts = shuffle([q.a, ...wrongs]);
+    const grid = document.getElementById('mc-grid');
+    grid.innerHTML = '';
+    opts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-btn';
+      btn.textContent = opt;
+      btn.onclick = () => checkMC(opt, q.a, btn, grid);
+      grid.appendChild(btn);
+    });
+  } else {
+    document.getElementById('mc-grid').style.display = 'none';
+    document.getElementById('type-wrap').style.display = 'flex';
+    const inp = document.getElementById('type-in');
+    inp.value = ''; inp.className = 'type-input'; inp.disabled = false;
+    setTimeout(() => inp.focus(), 100);
+  }
+}
+
+function checkMC(chosen, correct, btn, grid) {
+  if (S.answered) return;
+  S.answered = true;
+  grid.querySelectorAll('.mc-btn').forEach(b => {
+    b.disabled = true;
+    if (Number(b.textContent) === correct) b.classList.add('correct');
+  });
+  if (chosen === correct) { S.score++; btn.classList.add('correct'); showFeedback(true); }
+  else { btn.classList.add('wrong'); showFeedback(false); }
+}
+
+function submitTyped() {
+  if (S.answered) return;
+  const inp = document.getElementById('type-in');
+  const val = parseFloat(inp.value.trim());
+  if (isNaN(val)) { inp.focus(); return; }
+  S.answered = true; inp.disabled = true;
+  const correct = S.questions[S.current].a;
+  if (Math.abs(val - correct) < 0.01) { S.score++; inp.classList.add('correct'); showFeedback(true); }
+  else { inp.classList.add('wrong'); showFeedback(false, correct); }
+}
+
+function showFeedback(ok, correctAns) {
+  const fb = document.getElementById('feedback');
+  const exp = document.getElementById('explain-box');
+  const q = S.questions[S.current];
+  if (ok) {
+    fb.textContent = pick(['Nice one! ✅','Correct! 🎯','You got it! ⭐','Great work! 🔥','Nailed it! 💪']);
+    fb.className = 'feedback good';
+  } else {
+    fb.textContent = correctAns !== undefined ? `Not quite. Answer: ${correctAns}` : 'Not quite. ❌';
+    fb.className = 'feedback bad';
+  }
+  if (q.explain) { exp.innerHTML = q.explain; exp.style.display = 'block'; }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQ() {
+  S.current++;
+  if (S.current >= S.questions.length) showResults();
+  else renderQ();
+}
+
+function showResults() {
+  const total = S.questions.length;
+  const pct = Math.round((S.score / total) * 100);
+  const stars = pct >= 90 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
+  const emojis = pct >= 90 ? ['🏆','🎉','🔥'] : pct >= 60 ? ['💪','👏','😊'] : ['🙌','📚','👍'];
+  const msgs = pct >= 90 ? ['Awesome! Top of the class!','Nailed it!','Outstanding work!']
+             : pct >= 60 ? ['Good effort, keep going!','Well done, nearly there!','Solid work!']
+             : ['Keep practising, you\'ll get there!','Have another go!','Review and try again!'];
+
+  document.getElementById('res-emoji').textContent = pick(emojis);
+  document.getElementById('res-score').textContent = S.score;
+  document.getElementById('res-of').textContent = `out of ${total}`;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = pick(msgs);
+  document.getElementById('res-pct').textContent = `${pct}%`;
+
+  // Save to profile
+  const result = {
+    topic: S.topic, mode: S.mode, score: S.score, total, pct,
+    date: new Date().toLocaleDateString('en-NZ', { day:'numeric', month:'short' })
+  };
+  saveResult(S.profileId, result);
+
+  // Recent for this topic
+  const p = getProfile(S.profileId);
+  const topicHist = (p?.history || []).filter(h => h.topic === S.topic).slice(0, 4);
+  const thDiv = document.getElementById('topic-history');
+  if (topicHist.length <= 1) {
+    thDiv.innerHTML = '<div style="color:var(--muted);font-size:0.85rem">Keep playing to build up history!</div>';
+  } else {
+    thDiv.innerHTML = topicHist.map(h => `
+      <div class="history-row">
+        <div><div class="htopic">${h.mode}</div><div class="hdetail">${h.date}</div></div>
+        <div class="history-score">${h.score}/${h.total} (${h.pct}%)</div>
+      </div>`).join('');
+  }
+
+  go('s-results');
+}
+
+function playAgain() { startQuiz(); }
+
+// =====================================================================
+// PWA INSTALL
+// =====================================================================
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const shown = localStorage.getItem('mw_install_dismissed');
+  if (!shown) document.getElementById('install-banner').classList.add('show');
+});
+
+document.getElementById('install-yes-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  dismissInstall();
+});
+
+function dismissInstall() {
+  localStorage.setItem('mw_install_dismissed', '1');
+  document.getElementById('install-banner').classList.remove('show');
+}
+
+// =====================================================================
+// KEYBOARD
+// =====================================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const quiz = document.getElementById('s-quiz');
+    if (!quiz.classList.contains('active')) return;
+    if (S.answered) nextQ();
+    else submitTyped();
+  }
+});
+
+// =====================================================================
+// INIT
+// =====================================================================
+document.querySelector('[onclick="go(\'s-add-profile\')"]').addEventListener('click', initAddProfile);
+renderHome();
+
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+// =====================================================================
+// READING MODULE
+// =====================================================================
+
+// --- Text-to-speech helper ---
+function speak(text, onEnd) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.82;
+  utt.pitch = 1.05;
+  utt.lang = 'en-NZ';
+  if (onEnd) utt.onend = onEnd;
+  window.speechSynthesis.speak(utt);
+}
+
+// --- Activity picker on profile stats ---
+function pickActivity(type) {
+  document.getElementById('tab-maths').classList.toggle('active', type === 'maths');
+  document.getElementById('tab-read').classList.toggle('active', type === 'read');
+  document.getElementById('activity-maths-btn').style.display = type === 'maths' ? 'block' : 'none';
+  document.getElementById('activity-read-btn').style.display  = type === 'read'  ? 'block' : 'none';
+}
+
+
+
+// =====================================================================
+// WORD PRACTICE (5 year old)
+// =====================================================================
+
+const WORD_SETS = [
+  // Format: [word, emoji]
+  ['cat','🐱'], ['dog','🐶'], ['hat','🎩'], ['bat','🦇'], ['rat','🐭'],
+  ['sun','☀️'], ['run','🏃'], ['fun','😄'], ['bun','🧁'], ['gun','🔫'],
+  ['bed','🛏️'], ['red','🔴'], ['fed','🍽️'], ['led','💡'], ['hen','🐔'],
+  ['pig','🐷'], ['big','🔝'], ['dig','⛏️'], ['wig','💇'], ['fig','🍑'],
+  ['hop','🐸'], ['top','🔝'], ['cop','👮'], ['pop','🍿'], ['mop','🧹'],
+  ['cup','☕'], ['pup','🐶'], ['cut','✂️'], ['but','🤔'], ['nut','🥜'],
+  ['map','🗺️'], ['cap','🧢'], ['nap','😴'], ['tap','🚰'], ['lap','🏁'],
+  ['net','🕸️'], ['set','📐'], ['wet','💧'], ['jet','✈️'], ['pet','🐾'],
+  ['log','🪵'], ['fog','🌫️'], ['bog','🌿'], ['jog','🏃'], ['frog','🐸'],
+  ['bin','🗑️'], ['fin','🐟'], ['pin','📌'], ['win','🏆'], ['tin','🥫'],
+  ['bus','🚌'], ['mus','?'],  ['pus','?'],
+  ['van','🚐'], ['man','👨'], ['fan','🌀'], ['ban','🚫'], ['pan','🍳'],
+  ['dip','🫙'], ['lip','💋'], ['tip','💡'], ['hip','🕺'], ['zip','🤐'],
+  ['hug','🤗'], ['bug','🐛'], ['jug','🧃'], ['mug','☕'], ['rug','🪵'],
+  ['fox','🦊'], ['box','📦'], ['ox','🐂'],
+  ['hen','🐔'], ['ten','🔟'], ['den','🏠'], ['men','👨‍👨‍👦'], ['pen','✏️'],
+  ['ant','🐜'], ['bent','📐'], ['cent','💰'], ['dent','😬'], ['lent','🗓️'],
+  ['arm','💪'], ['farm','🚜'], ['harm','⚠️'], ['charm','✨'],
+  ['ball','⚽'], ['call','📞'], ['fall','🍂'], ['hall','🏫'], ['tall','📏'],
+  ['fish','🐟'], ['dish','🍽️'], ['wish','⭐'], ['swish','💨'],
+  ['cake','🎂'], ['lake','🏞️'], ['bake','👨‍🍳'], ['rake','🍂'], ['make','🔨'],
+  ['bike','🚲'], ['like','❤️'], ['hike','🥾'], ['mike','🎤'],
+  ['bone','🦴'], ['cone','🍦'], ['zone','🗺️'], ['home','🏠'], ['dome','🏛️'],
+  ['moon','🌙'], ['soon','⏰'], ['spoon','🥄'], ['noon','☀️'],
+  ['rain','🌧️'], ['main','⭐'], ['train','🚂'], ['plain','🌾'], ['chain','⛓️'],
+  ['tree','🌳'], ['free','🕊️'], ['bee','🐝'], ['see','👁️'], ['knee','🦵'],
+].filter(w => w[0].length <= 5 && !w[1].includes('?'));
+
+let WS = { words: [], current: 0, score: 0, answered: false };
+
+function startWordPractice() {
+  // Pick 10 random words
+  const shuffled = [...WORD_SETS].sort(() => Math.random() - 0.5);
+  WS.words = shuffled.slice(0, 10);
+  WS.current = 0; WS.score = 0;
+  renderWord();
+  go('s-read-words');
+}
+
+function renderWord() {
+  WS.answered = false;
+  const [word, emoji] = WS.words[WS.current];
+  document.getElementById('word-progress').textContent = `Word ${WS.current + 1} of ${WS.words.length}`;
+  document.getElementById('word-emoji').textContent = emoji;
+  document.getElementById('word-display').textContent = word;
+  document.getElementById('word-feedback').textContent = '';
+  document.getElementById('word-feedback').className = 'feedback';
+  document.getElementById('word-next-btn').style.display = 'none';
+
+  // Build choices: correct + 2 wrong from same length words
+  const sameLen = WORD_SETS.filter(w => w[0].length === word.length && w[0] !== word);
+  const wrongs = sameLen.sort(() => Math.random() - 0.5).slice(0, 2).map(w => w[0]);
+  const choices = [word, ...wrongs].sort(() => Math.random() - 0.5);
+
+  const choicesEl = document.getElementById('word-choices');
+  choicesEl.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'word-choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => checkWord(c, word, btn, choicesEl);
+    choicesEl.appendChild(btn);
+  });
+
+  // Auto-speak the word after short delay
+  setTimeout(() => speak(word), 400);
+}
+
+function speakCurrentWord() {
+  const [word] = WS.words[WS.current];
+  speak(word);
+}
+
+function checkWord(chosen, correct, btn, container) {
+  if (WS.answered) return;
+  WS.answered = true;
+  container.querySelectorAll('.word-choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+  const fb = document.getElementById('word-feedback');
+  if (chosen === correct) {
+    WS.score++;
+    btn.classList.add('correct');
+    fb.textContent = ['Well done! ⭐', 'Yes! 🎉', 'Amazing! 🌟', 'Correct! ✅'][Math.floor(Math.random()*4)];
+    fb.className = 'feedback good';
+    speak('Well done!');
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = `Not quite. It was: ${correct}`;
+    fb.className = 'feedback bad';
+    speak(`The word is ${correct}`);
+  }
+  document.getElementById('word-next-btn').style.display = 'block';
+}
+
+function nextWord() {
+  WS.current++;
+  if (WS.current >= WS.words.length) {
+    showWordsDone();
+  } else {
+    renderWord();
+  }
+}
+
+function showWordsDone() {
+  const pct = Math.round((WS.score / WS.words.length) * 100);
+  const emojis = pct >= 80 ? ['🏆','🎉','⭐'] : pct >= 50 ? ['👏','😊','💪'] : ['🌟','📚','👍'];
+  const msgs = pct >= 80 ? ['Amazing reading!', 'You are a star reader!', 'Superb!']
+             : pct >= 50 ? ['Good work! Keep going!', 'Getting better every time!']
+             : ['Keep practising, you\'ll get it!', 'Have another go!'];
+  document.getElementById('wd-emoji').textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('wd-title').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  document.getElementById('wd-sub').textContent = `You got ${WS.score} out of ${WS.words.length} words right`;
+  speak(msgs[0]);
+  go('s-read-words-done');
+}
+
+// =====================================================================
+// STORY READER (15 year old)
+// =====================================================================
+
+const STORY_TOPICS = [
+  { id: 'sport',   icon: '⚽', name: 'Sport' },
+  { id: 'gaming',  icon: '🎮', name: 'Gaming' },
+  { id: 'nature',  icon: '🌿', name: 'Nature' },
+  { id: 'mystery', icon: '🔍', name: 'Mystery' },
+  { id: 'space',   icon: '🚀', name: 'Space' },
+  { id: 'music',   icon: '🎵', name: 'Music' },
+];
+
+const STORIES = {
+  sport: [
+    { title: "The Big Game", sentences: [
+      "The crowd roared as the teams ran onto the field.",
+      "Jake had been waiting for this moment all season.",
+      "His boots hit the grass and he felt a surge of energy.",
+      "The referee blew the whistle and the game began.",
+      "Jake sprinted down the wing, the ball at his feet.",
+      "A defender came in hard but Jake twisted away.",
+      "He looked up, saw the gap, and crossed the ball.",
+      "Marcus rose above everyone and headed it into the net.",
+      "The stadium erupted — they were one nil up.",
+      "Jake ran to his teammate and they jumped together in celebration.",
+      "The second half was tighter, with both teams grinding hard.",
+      "With five minutes left, the opposition equalised.",
+      "Jake took a deep breath. There was still time.",
+      "He received the ball on the edge of the box.",
+      "Without thinking, he curled a shot toward the top corner.",
+      "The goalkeeper dived but could not reach it.",
+      "The net rippled and the whole team piled on top of Jake.",
+      "It was the best moment of his life.",
+    ]},
+    { title: "First Surf", sentences: [
+      "Mia had never surfed before, but today was the day.",
+      "Her instructor, Sam, handed her a thick foam board.",
+      "The waves at the beach looked small but fast.",
+      "Sam showed her how to pop up from lying down.",
+      "Mia practised on the sand until it felt natural.",
+      "Then she waded into the cold, fizzing water.",
+      "The first wave knocked her straight off the board.",
+      "She came up sputtering, laughing despite herself.",
+      "The second wave was the same.",
+      "But on the third attempt, something clicked.",
+      "She felt the wave lift the board and she pushed up.",
+      "For three seconds she was standing, actually surfing.",
+      "Then she toppled sideways into the foam.",
+      "But three seconds was enough.",
+      "She paddled back out with a huge grin on her face.",
+      "By the end of the session she had ridden five waves.",
+      "Sam said she was a natural.",
+      "Mia already knew she would be back tomorrow.",
+    ]},
+  ],
+  gaming: [
+    { title: "The Final Boss", sentences: [
+      "Leo had been stuck on this level for three days.",
+      "The boss had over a hundred health points and hit like a truck.",
+      "Every run ended the same way — a crushing defeat.",
+      "But tonight felt different.",
+      "He had memorised the attack patterns.",
+      "Phase one: dodge left on the red flash, strike twice.",
+      "Phase two: use the shield when the arms spin.",
+      "Phase three: stay mobile, never stop moving.",
+      "Leo cracked his knuckles and started the run.",
+      "Phase one went perfectly — three clean hits.",
+      "Phase two was shaky but he survived with one bar of health left.",
+      "Then came phase three.",
+      "His hands were shaking.",
+      "The boss moved faster now, the screen shaking with each hit.",
+      "Leo kept moving, kept dodging, kept striking.",
+      "Then he saw it — the boss paused for just a second.",
+      "He used his special attack.",
+      "The screen flashed white and the boss exploded.",
+      "Leo leaned back in his chair and stared at the ceiling.",
+      "He had done it. Finally.",
+    ]},
+    { title: "New Player", sentences: [
+      "It was Ethan's first day in the online server.",
+      "He had no gear, no money, and no idea what he was doing.",
+      "The other players moved confidently through the world.",
+      "He stumbled into a cave and immediately got lost.",
+      "A message popped up from another player: 'Need help?'",
+      "Ethan typed back: 'Yeah, totally lost.'",
+      "The player, named Raven, appeared beside him in the cave.",
+      "She had glowing armour and a sword that crackled with energy.",
+      "She guided him out of the cave without saying much.",
+      "Then she handed him a basic sword and a health potion.",
+      "'Start with these,' she said.",
+      "Ethan didn't know what to say. 'Why are you helping me?'",
+      "'Someone helped me when I started,' she replied.",
+      "They ended up playing together for the whole afternoon.",
+      "By the end Ethan had levelled up four times.",
+      "He didn't feel like a new player anymore.",
+    ]},
+  ],
+  nature: [
+    { title: "The Kauri Tree", sentences: [
+      "In the heart of the Northland forest stood an ancient kauri tree.",
+      "Nobody knew exactly how old it was, but some said over a thousand years.",
+      "Its trunk was so wide that ten people holding hands could barely circle it.",
+      "The bark was thick and rough, like the skin of something prehistoric.",
+      "Tama had come here with his grandfather every year since he was small.",
+      "They would stand at the base and look up into the canopy far above.",
+      "His grandfather said the tree had seen more history than any book could hold.",
+      "The kauri had survived storms, droughts, and logging that had taken others.",
+      "Tama put his hand on the bark and felt something he couldn't quite explain.",
+      "A kind of stillness. Like the tree was breathing very slowly.",
+      "His grandfather crouched down and pointed to the roots.",
+      "'The roots spread as far as the branches,' he said.",
+      "'What you see is only half of what it is.'",
+      "Tama thought about that on the drive home.",
+      "He wondered how much of everything was hidden underground.",
+    ]},
+  ],
+  mystery: [
+    { title: "The Missing Bike", sentences: [
+      "On Monday morning, Zara's bike was gone.",
+      "She had left it locked outside the library the night before.",
+      "The lock was still there. Cut clean through.",
+      "Zara took a photo of the lock and started asking around.",
+      "The librarian had seen a white van parked there around seven.",
+      "The dairy owner across the road thought he had seen two people.",
+      "But neither of them had a number plate.",
+      "Zara pulled up the street on Google Maps and noticed something.",
+      "There was a camera mounted on the traffic lights at the corner.",
+      "She walked to the council office and explained what had happened.",
+      "The woman behind the desk was surprised but looked it up.",
+      "The camera had footage from the night before.",
+      "There on the screen was a clear image of a white van.",
+      "And a partial plate: JB4.",
+      "Zara took a photo of the screen with her phone.",
+      "She wasn't sure what to do next, but she had somewhere to start.",
+    ]},
+  ],
+  space: [
+    { title: "Launch Day", sentences: [
+      "Maya had trained for this moment for seven years.",
+      "She sat strapped into her seat as the countdown began.",
+      "Through the small window she could see the curve of the horizon.",
+      "The ground crew were silent on the radio.",
+      "Ten. Nine. Eight.",
+      "She felt the vibration building beneath her.",
+      "Seven. Six. Five.",
+      "Her heart was hammering but her hands were steady.",
+      "Four. Three. Two. One.",
+      "The rocket ignited and she was pressed back into her seat.",
+      "The force was incredible, like the world was pushing her away.",
+      "Through the shaking she watched the sky darken from blue to black.",
+      "And then, suddenly, silence.",
+      "They had cleared the atmosphere.",
+      "Maya looked out the window.",
+      "The Earth was below her, wrapped in cloud and light.",
+      "It was the most beautiful thing she had ever seen.",
+      "She pressed her hand to the glass and just looked.",
+    ]},
+  ],
+  music: [
+    { title: "The Audition", sentences: [
+      "Caleb stood outside the rehearsal room and could not make himself open the door.",
+      "Inside, the school band director was waiting.",
+      "Caleb had practised the piece three hundred times. Maybe more.",
+      "He knew every note. But his hands would not stop shaking.",
+      "He thought about walking away.",
+      "He had thought about that a lot lately.",
+      "But then he remembered why he wanted this.",
+      "He remembered the first time he had heard a live band play.",
+      "How the sound had felt physical, like it moved through him.",
+      "How he had known, right then, that this was what he wanted to do.",
+      "He opened the door.",
+      "Mr. Santos looked up and smiled. 'Ready when you are.'",
+      "Caleb sat down, positioned his hands, and took one slow breath.",
+      "Then he started to play.",
+      "Everything else disappeared.",
+      "When he finished, there was a moment of silence.",
+      "Mr. Santos wrote something on his clipboard.",
+      "'Can you start Tuesday?'",
+      "Caleb nodded. He didn't trust himself to speak.",
+    ]},
+  ],
+};
+
+let SR = { topic: null, storyIdx: 0, sentenceIdx: 0, story: null };
+
+function buildStoryTopicGrid() {
+  const grid = document.getElementById('story-topic-grid');
+  grid.innerHTML = '';
+  STORY_TOPICS.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'story-topic-card';
+    el.innerHTML = `<span class="story-topic-icon">${t.icon}</span><div class="story-topic-name">${t.name}</div>`;
+    el.onclick = () => startStory(t.id);
+    grid.appendChild(el);
+  });
+}
+
+function startStory(topicId) {
+  SR.topic = topicId;
+  const topicStories = STORIES[topicId];
+  SR.storyIdx = Math.floor(Math.random() * topicStories.length);
+  SR.story = topicStories[SR.storyIdx];
+  SR.sentenceIdx = 0;
+  const topicObj = STORY_TOPICS.find(t => t.id === topicId);
+  document.getElementById('reader-topbar').textContent = topicObj.icon + ' ' + topicObj.name;
+  document.getElementById('story-title-lbl').textContent = SR.story.title;
+  renderSentence();
+  go('s-story-reader');
+}
+
+function renderSentence() {
+  const sentences = SR.story.sentences;
+  const s = sentences[SR.sentenceIdx];
+  document.getElementById('sentence-counter').textContent =
+    `Sentence ${SR.sentenceIdx + 1} of ${sentences.length}`;
+
+  // Split into tappable words
+  const display = document.getElementById('sentence-display');
+  display.innerHTML = '';
+  s.split(' ').forEach(word => {
+    const clean = word.replace(/[^a-zA-Z'-]/g, '');
+    const span = document.createElement('span');
+    span.className = 's-word';
+    span.textContent = word + ' ';
+    span.onclick = () => {
+      span.classList.add('speaking');
+      speak(clean, () => span.classList.remove('speaking'));
+    };
+    display.appendChild(span);
+  });
+
+  document.getElementById('story-prev-btn').disabled = SR.sentenceIdx === 0;
+  document.getElementById('story-next-btn').textContent =
+    SR.sentenceIdx === sentences.length - 1 ? 'Finish ✓' : 'Next →';
+}
+
+function storyNav(dir) {
+  const sentences = SR.story.sentences;
+  if (dir === 1 && SR.sentenceIdx === sentences.length - 1) {
+    // Done
+    const topicObj = STORY_TOPICS.find(t => t.id === SR.topic);
+    document.getElementById('story-done-msg').textContent =
+      `You finished "${SR.story.title}". That took real focus. Every story you read makes the next one easier.`;
+    go('s-story-done');
+    return;
+  }
+  SR.sentenceIdx = Math.max(0, Math.min(sentences.length - 1, SR.sentenceIdx + dir));
+  renderSentence();
+}
+
+function readAllSentence() {
+  const s = SR.story.sentences[SR.sentenceIdx];
+  speak(s);
+}
+
+// =====================================================================
+// READING CHOOSER (routes to words or stories based on age/preference)
+// =====================================================================
+// We show a simple picker so both kids can use reading from their profile
+function goReading() {
+  const p = getProfile(S.profileId);
+  // Show a chooser
+  go('s-read-chooser');
+}
+
+</script>
+
+<!-- =====================================================================
+     READING: WORD PRACTICE (5 yr old)
+     ===================================================================== -->
+<div id="s-read-words" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title">Word Practice</div><div></div></div>
+  <div class="content">
+    <div class="word-progress" id="word-progress"></div>
+    <div class="word-card" id="word-card">
+      <span class="word-emoji" id="word-emoji"></span>
+      <div class="word-display" id="word-display"></div>
+      <button class="word-speak-btn" onclick="speakCurrentWord()">🔊 Hear it</button>
+    </div>
+    <div class="word-choices" id="word-choices"></div>
+    <div class="feedback" id="word-feedback"></div>
+    <button class="next-btn" id="word-next-btn" onclick="nextWord()" style="display:none">Next word →</button>
+  </div>
+</div>
+
+<!-- Word session done -->
+<div id="s-read-words-done" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title">Word Practice</div><div></div></div>
+  <div class="content" style="padding-top:32px">
+    <div class="word-well-done">
+      <span class="wd-emoji" id="wd-emoji"></span>
+      <div class="wd-title" id="wd-title"></div>
+      <div class="wd-sub" id="wd-sub"></div>
+    </div>
+    <button class="btn btn-yellow" onclick="startWordPractice()">Play again 🔁</button>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="go('s-home')">Home</button>
+  </div>
+</div>
+
+<!-- =====================================================================
+     READING: STORY TOPIC PICKER (15 yr old)
+     ===================================================================== -->
+<div id="s-story-topics" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-home')">← Back</button><div class="topbar-title">Reading</div><div></div></div>
+  <div class="content">
+    <div class="section-label">Pick a topic you like</div>
+    <div class="story-topic-grid" id="story-topic-grid"></div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     READING: STORY READER
+     ===================================================================== -->
+<div id="s-story-reader" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-story-topics')">← Back</button><div class="topbar-title" id="reader-topbar"></div><div></div></div>
+  <div class="content">
+    <div class="story-meta">
+      <div class="story-title-lbl" id="story-title-lbl"></div>
+      <button class="story-read-all-btn" onclick="readAllSentence()">🔊 Read to me</button>
+    </div>
+    <div class="story-hint">Tap any word to hear it spoken. Use the arrows to move through the story.</div>
+    <div class="sentence-counter" id="sentence-counter"></div>
+    <div class="sentence-display" id="sentence-display"></div>
+    <div class="story-nav">
+      <button class="story-nav-btn" id="story-prev-btn" onclick="storyNav(-1)">← Prev</button>
+      <button class="story-nav-btn speak" onclick="readAllSentence()">🔊 Hear sentence</button>
+      <button class="story-nav-btn" id="story-next-btn" onclick="storyNav(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Story done -->
+<div id="s-story-done" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-story-topics')">← Back</button><div class="topbar-title">Reading</div><div></div></div>
+  <div class="content" style="padding-top:32px">
+    <div class="story-done-card">
+      <span class="sd-emoji">📖</span>
+      <div class="sd-title">Story complete!</div>
+      <div class="sd-msg" id="story-done-msg"></div>
+    </div>
+    <button class="btn btn-yellow" onclick="go('s-story-topics')">Read another story</button>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="go('s-home')">Home</button>
+  </div>
+</div>
+
+
+<!-- READING CHOOSER -->
+<div id="s-read-chooser" class="screen">
+  <div class="topbar"><button class="back-btn" onclick="go('s-profile-stats')">← Back</button><div class="topbar-title">Reading</div><div></div></div>
+  <div class="content" style="padding-top:16px">
+    <div class="section-label">What kind of reading?</div>
+    <div class="level-cards">
+      <div class="level-card l1" onclick="startWordPractice()">
+        <div class="level-icon">🔤</div>
+        <div class="level-info">
+          <div class="level-name">Word Practice</div>
+          <div class="level-age">Great for younger readers</div>
+          <div class="level-topics">3-letter words · Picture clues · Hear the word spoken</div>
+        </div>
+      </div>
+      <div class="level-card l3" onclick="buildStoryTopicGrid(); go('s-story-topics')">
+        <div class="level-icon">📖</div>
+        <div class="level-info">
+          <div class="level-name">Story Reader</div>
+          <div class="level-age">For confident readers building fluency</div>
+          <div class="level-topics">Sport · Gaming · Mystery · Space · Nature · Music</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
