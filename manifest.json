@@ -1,8 +1,9 @@
 {
-  "name": "Maths Whiz",
-  "short_name": "Maths Whiz",
-  "description": "Fun maths practice for kids aged 5–15",
-  "start_url": "/",
+  "name": "Learn Whiz",
+  "short_name": "Learn Whiz",
+  "description": "Maths and Reading for kids aged 5–15",
+  "start_url": "/Learnwhiz/",
+  "scope": "/Learnwhiz/",
   "display": "standalone",
   "background_color": "#0f1923",
   "theme_color": "#0f1923",
